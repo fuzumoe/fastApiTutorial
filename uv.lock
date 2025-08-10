@@ -107,12 +107,14 @@ dependencies = [
     { name = "beanie" },
     { name = "fastapi" },
     { name = "fastapi-cli" },
+    { name = "motor" },
     { name = "mypy" },
     { name = "pydantic" },
     { name = "pyjwt" },
     { name = "pytest" },
     { name = "pyyaml" },
     { name = "ruff" },
+    { name = "scalar-fastapi" },
     { name = "uvicorn" },
 ]
 
@@ -121,12 +123,14 @@ requires-dist = [
     { name = "beanie", specifier = ">=2.0.0" },
     { name = "fastapi", specifier = ">=0.116.1" },
     { name = "fastapi-cli", specifier = ">=0.0.8" },
+    { name = "motor", specifier = ">=3.7.1" },
     { name = "mypy", specifier = ">=1.17.1" },
     { name = "pydantic", specifier = ">=2.11.7" },
     { name = "pyjwt", specifier = ">=2.10.1" },
     { name = "pytest", specifier = ">=8.4.1" },
     { name = "pyyaml", specifier = ">=6.0.2" },
     { name = "ruff", specifier = ">=0.12.8" },
+    { name = "scalar-fastapi", specifier = ">=1.2.3" },
     { name = "uvicorn", specifier = ">=0.35.0" },
 ]
 
@@ -210,6 +214,18 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/d6/54/cfe61301667036ec958cb99bd3efefba235e65cdeb9c84d24a8293ba1d90/mdurl-0.1.2.tar.gz", hash = "sha256:bb413d29f5eea38f31dd4754dd7377d4465116fb207585f97bf925588687c1ba", size = 8729, upload-time = "2022-08-14T12:40:10.846Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/b3/38/89ba8ad64ae25be8de66a6d463314cf1eb366222074cfda9ee839c56a4b4/mdurl-0.1.2-py3-none-any.whl", hash = "sha256:84008a41e51615a49fc9966191ff91509e3c40b939176e643fd50a5c2196b8f8", size = 9979, upload-time = "2022-08-14T12:40:09.779Z" },
+]
+
+[[package]]
+name = "motor"
+version = "3.7.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pymongo" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/93/ae/96b88362d6a84cb372f7977750ac2a8aed7b2053eed260615df08d5c84f4/motor-3.7.1.tar.gz", hash = "sha256:27b4d46625c87928f331a6ca9d7c51c2f518ba0e270939d395bc1ddc89d64526", size = 280997, upload-time = "2025-05-14T18:56:33.653Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/01/9a/35e053d4f442addf751ed20e0e922476508ee580786546d699b0567c4c67/motor-3.7.1-py3-none-any.whl", hash = "sha256:8a63b9049e38eeeb56b4fdd57c3312a6d1f25d01db717fe7d82222393c410298", size = 74996, upload-time = "2025-05-14T18:56:31.665Z" },
 ]
 
 [[package]]
@@ -494,6 +510,15 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/71/13/ab9120add1c0e4604c71bfc2e4ef7d63bebece0cfe617013da289539cef8/ruff-0.12.8-py3-none-win32.whl", hash = "sha256:daf3475060a617fd5bc80638aeaf2f5937f10af3ec44464e280a9d2218e720d3", size = 11694382, upload-time = "2025-08-07T19:05:38.468Z" },
     { url = "https://files.pythonhosted.org/packages/f6/dc/a2873b7c5001c62f46266685863bee2888caf469d1edac84bf3242074be2/ruff-0.12.8-py3-none-win_amd64.whl", hash = "sha256:7209531f1a1fcfbe8e46bcd7ab30e2f43604d8ba1c49029bb420b103d0b5f76e", size = 12740482, upload-time = "2025-08-07T19:05:40.391Z" },
     { url = "https://files.pythonhosted.org/packages/cb/5c/799a1efb8b5abab56e8a9f2a0b72d12bd64bb55815e9476c7d0a2887d2f7/ruff-0.12.8-py3-none-win_arm64.whl", hash = "sha256:c90e1a334683ce41b0e7a04f41790c429bf5073b62c1ae701c9dc5b3d14f0749", size = 11884718, upload-time = "2025-08-07T19:05:42.866Z" },
+]
+
+[[package]]
+name = "scalar-fastapi"
+version = "1.2.3"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/74/f2/28e52535f13bef8781e45cb92a28fe52f28c300a132fc9d8f3db52e2f26e/scalar_fastapi-1.2.3.tar.gz", hash = "sha256:cf9ba36947ea1b0402fc1fa311f30a690b39e3baedef1f7b4553cf57002daceb", size = 10356, upload-time = "2025-07-29T22:44:35.653Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/0f/d7/7b32f0dd732a8c19b97005179bf5e9a0dbddb76341fea3c967c77b95e722/scalar_fastapi-1.2.3-py3-none-any.whl", hash = "sha256:15e0809d05d5b476faf299c3f20e003c6a594ea00d8be50db2efd23b5a9be30d", size = 12450, upload-time = "2025-07-29T22:44:34.427Z" },
 ]
 
 [[package]]
