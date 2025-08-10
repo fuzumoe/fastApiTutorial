@@ -1,7 +1,10 @@
 import os
-from fastapi import FastAPI
-from pydantic import BaseModel
+
 import uvicorn
+from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
+from pydantic import BaseModel
+from scalar_fastapi import get_scalar_api_reference
 
 # Get environment variables with defaults
 APP_NAME = os.getenv("APP_NAME", "FastAPI Tutorial")
@@ -87,7 +90,7 @@ class UpdateTodoRequest(BaseModel):
 
 @app.post("/todos")
 async def create_todo(
-    todo: CreateTodoRequest | list[CreateTodoRequest]
+    todo: CreateTodoRequest | list[CreateTodoRequest],
 ) -> TodoResponse | list[TodoResponse]:
     if isinstance(todo, list):
         response = []
@@ -159,6 +162,14 @@ def delete_todo(id: int) -> dict[str, str] | None:
             todos.pop(i)
             return {"message": "Todo deleted successfully"}
     return None
+
+
+@app.get("/scalar")
+async def get_scalar() -> HTMLResponse:
+    content: HTMLResponse = get_scalar_api_reference(
+        openapi_url=app.openapi_url, title=APP_NAME
+    )
+    return content
 
 
 if __name__ == "__main__":
