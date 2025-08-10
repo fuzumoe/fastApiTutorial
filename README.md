@@ -2,6 +2,195 @@
 
 This lesson covers setting up a professional FastAPI project structure with modern Python tooling including type checking, linting, formatting, and dependency management.
 
+## VS Code Configuration Files
+
+### .vscode Directory
+
+The `.vscode` directory contains project-specific settings that apply to everyone who works on the project. These settings ensure consistent development environments across team members.
+
+### settings.json
+
+The `settings.json` file configures VS Code's behavior for your project.
+
+```json
+{
+    "python.defaultInterpreterPath": ".venv/bin/python",
+    "ruff.enable": true,
+    "ruff.lint.enable": true,
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.ruff": "explicit",
+        "source.organizeImports.ruff": "explicit"
+    },
+    "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.diagnosticMode": "workspace",
+    "python.analysis.inlayHints.variableTypes": true,
+    "python.analysis.inlayHints.functionReturnTypes": true,
+    "python.testing.pytestArgs": ["tests"],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "mypy.dmypy": false,
+    "mypy.enabled": true,
+    "mypy.runUsingActiveInterpreter": true
+}
+```
+
+#### Key Settings Explained:
+
+1. **Python Path**: Points to your virtual environment
+   ```json
+   "python.defaultInterpreterPath": ".venv/bin/python"
+   ```
+
+2. **Ruff Configuration**: Enables Ruff for linting and formatting
+   ```json
+   "ruff.enable": true,
+   "ruff.lint.enable": true
+   ```
+
+3. **Auto-formatting**: Configures actions to happen when you save files
+   ```json
+   "editor.formatOnSave": true,
+   "editor.codeActionsOnSave": {
+       "source.fixAll.ruff": "explicit",
+       "source.organizeImports.ruff": "explicit"
+   }
+   ```
+
+4. **Type Checking**: Configures Pylance's type checking mode
+   ```json
+   "python.analysis.typeCheckingMode": "basic"
+   ```
+
+5. **Testing Configuration**: Sets pytest as the default test framework
+   ```json
+   "python.testing.pytestArgs": ["tests"],
+   "python.testing.unittestEnabled": false,
+   "python.testing.pytestEnabled": true
+   ```
+
+6. **MyPy Settings**: Configures static type checking
+   ```json
+   "mypy.enabled": true,
+   "mypy.runUsingActiveInterpreter": true
+   ```
+
+### launch.json
+
+The `launch.json` file configures debugging configurations and launch tasks.
+
+```json
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Ruff Fix",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "${workspaceFolder}/.venv/bin/ruff check --fix ${workspaceFolder}",
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Ruff Format",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "${workspaceFolder}/.venv/bin/ruff format ${workspaceFolder}",
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Pre-commit Run All",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "pre-commit run --all-files",
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "FastAPI",
+            "type": "python",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": [
+                "main:app",
+                "--reload",
+                "--port",
+                "8000"
+            ],
+            "jinja": true,
+            "justMyCode": true,
+            "env": {
+                "MONGO_PORT": "27019",
+                "MONGO_HOST": "localhost",
+                "MONGO_USER": "root",
+                "MONGO_PASSWORD": "example",
+                "MONGO_DB": "fastapi_tutorial"
+            }
+        }
+    ]
+}
+```
+
+#### Key Configurations Explained:
+
+1. **Ruff Fix**: Runs Ruff's linting with auto-fix
+2. **Ruff Format**: Runs Ruff's code formatter
+3. **Pre-commit Run All**: Executes all pre-commit hooks
+4. **FastAPI**: Launches the FastAPI application with debugging support
+
+### extensions.json
+
+The `extensions.json` file recommends VS Code extensions for your project.
+
+```json
+{
+  "recommendations": [
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "matangover.mypy",
+    "charliermarsh.ruff",
+    "ms-azuretools.vscode-docker",
+    "redhat.vscode-yaml",
+    "mongodb.mongodb-vscode",
+    "tamasfe.even-better-toml",
+    "njpwerner.autodocstring",
+    "streetsidesoftware.code-spell-checker",
+    "mhutchie.git-graph",
+    "eamodio.gitlens",
+    "usernamehw.errorlens"
+  ]
+}
+```
+
+#### Extension Roles:
+
+1. **Python & Pylance**: Core Python language support
+   - `ms-python.python` - Base Python extension
+   - `ms-python.vscode-pylance` - Python language server with type checking
+
+2. **Code Quality**: Linting, formatting and type checking
+   - `matangover.mypy` - MyPy type checking integration
+   - `charliermarsh.ruff` - Fast Python linter and formatter
+
+3. **Technology-specific**: Support for related technologies
+   - `ms-azuretools.vscode-docker` - Docker integration
+   - `redhat.vscode-yaml` - YAML support for configuration files
+   - `mongodb.mongodb-vscode` - MongoDB integration
+   - `tamasfe.even-better-toml` - TOML support for `pyproject.toml`
+
+4. **Developer Experience**: Productivity enhancements
+   - `njpwerner.autodocstring` - Auto-generates Python docstrings
+   - `streetsidesoftware.code-spell-checker` - Spell checking
+   - `mhutchie.git-graph` - Git repository visualization
+   - `eamodio.gitlens` - Git integration
+   - `usernamehw.errorlens` - Enhances error display
+
+### Best Practices
+
+1. **Keep settings consistent**: Match your VS Code settings with your CI/CD pipeline configurations
+2. **Add descriptive comments**: Add comments to your settings files to explain non-obvious settings
+3. **Version control**: Always include these config files in version control
+4. **Update regularly**: Keep extensions and their settings updated as new versions are released
+5. **Minimize required extensions**: Only include essential extensions to avoid bloat
+
 ## References
 
 Here are links to the official documentation for the tools used in this scaffolding, along with their primary purposes:
