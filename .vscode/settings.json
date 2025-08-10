@@ -1,7 +1,5 @@
 {
     "python.defaultInterpreterPath": ".venv/bin/python",
-    "ruff.enable": true,
-    "ruff.lint.enable": true,
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
         "source.fixAll.ruff": "explicit",
@@ -36,5 +34,10 @@
         "tests"
     ],
     "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true
+    "python.testing.pytestEnabled": true,
+
+    // Disable dmypy and configure mypy
+    "mypy.dmypy": false,
+    "mypy.enabled": true,
+    "mypy.runUsingActiveInterpreter": true
 }
