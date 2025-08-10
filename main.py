@@ -1,7 +1,10 @@
 import os
 from typing import Any
-from fastapi import FastAPI
+
 import uvicorn
+from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
+from scalar_fastapi import get_scalar_api_reference
 
 # Get environment variables with defaults
 APP_NAME = os.getenv("APP_NAME", "FastAPI Tutorial")
@@ -104,6 +107,14 @@ def delete_todo(id: int) -> dict[str, str] | None:
         todos.remove(todo)
         return {"message": "Todo deleted successfully"}
     return None
+
+
+@app.get("/scalar")
+async def get_scalar() -> HTMLResponse:
+    content: HTMLResponse = get_scalar_api_reference(
+        openapi_url=app.openapi_url, title=APP_NAME
+    )
+    return content
 
 
 if __name__ == "__main__":
