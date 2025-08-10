@@ -1,6 +1,6 @@
 import os
-from typing import Any
 from fastapi import FastAPI
+from pydantic import BaseModel
 import uvicorn
 
 # Get environment variables with defaults
@@ -38,71 +38,126 @@ todos = [
         "rate": 4.2,
     },
 ]
+
+
 # Create FastAPI instance
 app = FastAPI(title=APP_NAME, description=APP_DESCRIPTION, version=APP_VERSION)
 
 
+class CreateTodoRequest(BaseModel):
+    task: str
+    completed: bool
+    time: str
+    priority: int
+    rate: float
+
+
+class TodoResponse(BaseModel):
+    id: int
+    task: str
+    completed: bool
+    time: str
+    priority: int
+    rate: float
+
+
+class TodoFilterRequest(BaseModel):
+    task: str | None
+    completed: bool | None
+    time: str | None
+    rate: float | None
+    priority: int | None
+
+
+class PatchTodoRequest(BaseModel):
+    task: str | None
+    completed: bool | None
+    time: str | None
+    priority: int | None
+    rate: float | None
+
+
+class UpdateTodoRequest(BaseModel):
+    task: str
+    completed: bool
+    time: str
+    priority: int
+    rate: float
+
+
 @app.post("/todos")
-async def create_todo(todo: dict[str, Any] | list[dict[str, Any]]) -> dict[str, Any]:
+async def create_todo(
+    todo: CreateTodoRequest | list[CreateTodoRequest]
+) -> TodoResponse | list[TodoResponse]:
     if isinstance(todo, list):
+        response = []
         for item in todo:
-            item["id"] = len(todos) + 1
-            todos.append(item)
-        return {"message": "Todos created successfully"}
+            item_dict = item.model_dump()
+            item_dict["id"] = len(todos) + 1
+            todos.append(item_dict)
+            response.append(TodoResponse.model_validate(item_dict))
+        return response
     else:
-        todo["id"] = len(todos) + 1
-        todos.append(todo)
-        return todo
+        todo_dict = todo.model_dump()
+        todo_dict["id"] = len(todos) + 1
+        todos.append(todo_dict)
+        result: TodoResponse = TodoResponse.model_validate(todo_dict)
+        return result
 
 
 @app.get("/todos")
-async def read_todos(filters: dict[str, Any] | None = None) -> list[dict[str, Any]]:
+async def read_todos(filters: TodoFilterRequest | None = None) -> list[TodoResponse]:
     if not filters:
-        return todos
+        return [TodoResponse.model_validate(todo) for todo in todos]
+
     filtered_todos = []
+    # Only include non-None values in filter
+    filter_dict = {k: v for k, v in filters.model_dump().items() if v is not None}
+
     for todo in todos:
         match = True
-        for key, value in filters.items():
+        for key, value in filter_dict.items():
             if key in todo and todo[key] != value:
                 match = False
                 break
         if match:
-            filtered_todos.append(todo)
+            filtered_todos.append(TodoResponse.model_validate(todo))
+
     return filtered_todos
 
 
-@app.post("/todos/{id}")
-def get_todo(id: int) -> dict[str, Any] | None:
+@app.get("/todos/{id}")
+def get_todo(id: int) -> TodoResponse | None:
     for todo in todos:
         if todo["id"] == id:
-            return dict(todo)  # Explicitly return as dict
-    return None
+            result: TodoResponse = TodoResponse.model_validate(todo)
+    return result
 
 
 @app.patch("/todos/{id}")
-def update_todo(id: int, updates: dict[str, Any]) -> dict[str, Any] | None:
-    todo = get_todo(id)
-    if todo:
-        todo.update(updates)
-        return dict(todo)  # Explicitly return as dict
-    return None
+def update_todo(id: int, updates: PatchTodoRequest) -> TodoResponse:
+    for todo in todos:
+        if todo["id"] == id:
+            todo.update(updates.model_dump(exclude_unset=True))
+            result: TodoResponse = TodoResponse.model_validate(todo)
+    return result
 
 
 @app.put("/todos/{id}")
-def upudate_todo(id: int, todo: dict[str, Any]) -> dict[str, Any] | None:
-    existing_todo = get_todo(id)
-    if existing_todo:
-        existing_todo.update(todo)
-        return dict(existing_todo)  # Explicitly return as dict
-    return None
+def replace_todo_completely(id: int, todo: UpdateTodoRequest) -> TodoResponse:
+    for existing_todo in todos:
+        if existing_todo["id"] == id:
+            existing_todo.update(todo.model_dump())
+            result: TodoResponse = TodoResponse.model_validate(existing_todo)
+    return result
 
 
 @app.delete("/todos/{id}")
 def delete_todo(id: int) -> dict[str, str] | None:
-    todo = get_todo(id)
-    if todo:
-        todos.remove(todo)
-        return {"message": "Todo deleted successfully"}
+    for i, todo in enumerate(todos):
+        if todo["id"] == id:
+            todos.pop(i)
+            return {"message": "Todo deleted successfully"}
     return None
 
 
