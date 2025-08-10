@@ -1,6 +1,9 @@
 import os
-from fastapi import FastAPI
+
 import uvicorn
+from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
+from scalar_fastapi import get_scalar_api_reference
 
 # Get environment variables with defaults
 APP_NAME = os.getenv("APP_NAME", "FastAPI Tutorial")
@@ -23,7 +26,15 @@ async def hello_world() -> dict[str, str]:
 # Original main function (can be used for non-API functionality)
 def main() -> None:
     print(f"Hello from {APP_NAME}!")
-    return None
+    return
+
+
+@app.get("/scalar")
+async def get_scalar() -> HTMLResponse:
+    content: HTMLResponse = get_scalar_api_reference(
+        openapi_url=app.openapi_url, title=APP_NAME
+    )
+    return content
 
 
 # Run the API with uvicorn when script is executed
