@@ -1,265 +1,287 @@
-# FastAPI Tutorial with Beanie ODM and Docker
+# FastAPI Dependencies and Type Annotations
 
-This project demonstrates how to build a modern REST API using FastAPI with MongoDB database integration via Beanie ODM, all containerized with Docker.
+This lesson covers dependency injection in FastAPI and advanced Python type annotations, both of which are essential for building maintainable, testable, and type-safe APIs.
 
-## Beanie ODM Integration
+## FastAPI Dependency Injection
 
-[Beanie](https://beanie-odm.dev/) is an asynchronous Python ODM (Object-Document Mapper) for MongoDB, built on top of [Motor](https://motor.readthedocs.io/) and [Pydantic](https://pydantic-docs.helpmanual.io/). It allows you to define MongoDB document structures using Python classes with type hints.
+Dependency injection is a design pattern where objects receive their dependencies instead of creating them. In FastAPI, this pattern is implemented using the `Depends` function, which allows you to:
 
-### Document Model Definition
+1. Reuse shared logic across multiple endpoints
+2. Apply middleware-like functionality to specific routes
+3. Organize your code into modular, testable components
+4. Automatically validate and parse parameters
 
-In our application, we define a `Todo` document model:
+### Basic Dependencies
+
+The simplest form of dependency is a function that returns a value:
 
 ```python
-class Todo(Document):
-    task: str
-    completed: bool
-    time: datetime
-    priority: int
-    rate: float
+async def get_greeting() -> str:
+    return "Hello from a dependency!"
 
-    class Settings:
-        name = "todos"  # MongoDB collection name
+@app.get("/greet")
+async def greet_with_dependency(
+    greeting: Annotated[str, Depends(get_greeting)],
+) -> dict[str, str]:
+    return {"msg": greeting}
 ```
 
-This class:
-1. Inherits from Beanie's `Document` class
-2. Defines fields with Python type annotations
-3. Specifies the MongoDB collection name in the inner `Settings` class
+When a request is made to `/greet`, FastAPI:
+1. Calls `get_greeting()`
+2. Injects the return value into the `greeting` parameter
+3. Executes the route function with this value
 
-### Database Initialization
+### Class-based Dependencies
 
-The database connection is initialized in the `init()` function:
+For more complex dependencies, you can use classes:
 
 ```python
-async def init(app: FastAPI) -> None:
-    # Create MongoDB client
-    client: motor.motor_asyncio.AsyncIOMotorClient = (
-        motor.motor_asyncio.AsyncIOMotorClient(MONGO_URI)
-    )
-    # Store client in app state for later access
-    app.state.mongo_client = client
+class GreeterService:
+    def __init__(self, prefix: str = "Hello") -> None:
+        self.prefix: str = prefix
 
-    # Get database
-    db = client[MONGO_DB]
+    def greet(self, name: str) -> str:
+        return f"{self.prefix}, {name}!"
 
-    # Initialize Beanie with database and document models
-    await init_beanie(database=cast(Any, db), document_models=[Todo])
+def get_greeter() -> GreeterService:
+    return GreeterService(prefix="Hello")
+
+Greeter = Annotated[GreeterService, Depends(get_greeter)]
+
+@app.get("/greet/{name}")
+def greet(name: str, greeter: Greeter) -> dict[str, str]:
+    return {"message": greeter.greet(name)}
 ```
 
-This function:
-1. Creates an async MongoDB client using connection details from environment variables
-2. Stores the client in the FastAPI app's state
-3. Initializes Beanie with the database and document models
+This approach is useful when:
+1. The dependency has multiple methods or properties
+2. You need to maintain state between method calls
+3. You want to mock or replace the dependency in tests
 
-### Data Management Functions
+### Route-level Dependencies
 
-We've implemented two key data management functions:
-
-#### Remove All Data
+You can apply dependencies to entire routes without injecting them:
 
 ```python
-async def remove_all_data() -> None:
-    logger.info("Removing all todos...")
-    await Todo.delete_all()
-    logger.info("All todos removed.")
+def require_api_key(request: Request) -> None:
+    if request.headers.get("x-api-key") != "secret":
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid API key"
+        )
+
+@app.get("/protected", dependencies=[Depends(require_api_key)])
+def protected() -> dict[str, bool]:
+    return {"ok": True}
 ```
 
-This function deletes all documents from the `todos` collection using Beanie's `delete_all()` method.
+This pattern is ideal for:
+1. Authentication and authorization checks
+2. Rate limiting
+3. Logging and monitoring
+4. Access control
 
-#### Populate Initial Data
+### Dependency Chaining
 
-```python
-async def populate_data() -> None:
-    logger.info("No todos found, populating initial data...")
-    initial_todos = []
-    for todo_data in todos:
-        todo_dict = dict(todo_data)
-        todo_dict.pop("id", None)  # Remove ID field as MongoDB will generate it
-        initial_todos.append(Todo(**todo_dict))
-
-    await Todo.insert_many(initial_todos)
-    logger.info("Initial data populated.")
-```
-
-This function:
-1. Creates Todo objects from a predefined list of dictionaries
-2. Removes the `id` field from each dictionary (since MongoDB will generate IDs)
-3. Inserts all todos at once using Beanie's `insert_many()` method
-
-## Application Lifecycle Management
-
-FastAPI supports dependency injection and lifecycle event handlers. In our application, we use the `lifespan` context manager to handle startup and shutdown events:
+Dependencies can depend on other dependencies, creating chains:
 
 ```python
-@asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+async def get_db():
+    db = Database()
     try:
-        logger.info("Starting FastAPI application...")
-        await init(app)
-        await remove_all_data()
-        await populate_data()
-        yield
-        logger.info("Shutting down FastAPI application...")
-        if hasattr(app.state, "mongo_client") and app.state.mongo_client is not None:
-            try:
-                app.state.mongo_client.close()
-            except Exception as e:
-                logger.error(f"Error closing MongoDB client: {e}")
-    except Exception as e:
-        logger.error(f"Error in lifespan: {e}", exc_info=True)
-        yield
+        yield db
+    finally:
+        db.close()
+
+async def get_user_repo(db: Annotated[Database, Depends(get_db)]):
+    return UserRepository(db)
+
+@app.get("/users")
+async def list_users(repo: Annotated[UserRepository, Depends(get_user_repo)]):
+    return await repo.list()
 ```
 
-This context manager:
+### Benefits of Dependency Injection
 
-1. **On startup**:
-   - Initializes the database connection
-   - Removes existing data (for a clean start)
-   - Populates initial data
+1. **Testability**: Dependencies can be easily mocked in unit tests
+2. **Reusability**: Common logic can be shared across endpoints
+3. **Separation of concerns**: Each component has a specific responsibility
+4. **Maintainability**: Code is more modular and easier to update
 
-2. **On shutdown**:
-   - Closes the MongoDB client connection
-   - Handles any exceptions gracefully
+## Python Type Annotations
 
-3. **Error handling**:
-   - Logs errors that occur during startup or shutdown
-   - Ensures the application can still start even if there's a database error
+Type annotations add static type information to Python code, enhancing:
+1. Code readability
+2. IDE autocompletion and error checking
+3. Static analysis through tools like mypy
 
-The `lifespan` parameter is passed to the FastAPI application constructor:
+### Basic Type Annotations
+
+Python's typing system allows you to annotate variables and function signatures:
 
 ```python
-app = FastAPI(
-    title=APP_NAME,
-    description=APP_DESCRIPTION,
-    version=APP_VERSION,
-    docs_url=API_DOCS_URL,
-    openapi_url=OPENAPI_URL,
-    redoc_url=REDOC_URL,
-    scalar_url=SCALARA_URL,
-    lifespan=lifespan,
-)
+# Variable type hints
+text: str = "value"
+pert: int = 90
+temp: float = 37.5
+
+# Function annotations
+def add(a: int, b: int) -> int:
+    return a + b
 ```
 
-## Docker Integration
+### Union Types
 
-Our project uses Docker to containerize both the FastAPI application and the MongoDB database, making it easy to develop and deploy consistently across different environments.
-
-### Docker Compose Configuration
-
-The `docker-compose.yml` file defines the services:
-
-```yaml
-services:
-  mongodb:
-    image: mongo:6.0
-    container_name: mongodb
-    ports:
-      - "${MONGO_PORT}:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
-      MONGO_INITDB_DATABASE: ${MONGO_DB}
-    command: ["--auth", "--bind_ip_all"]   # enforce auth
-    volumes:
-      - mongodb_data:/data/db
-    healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-volumes:
-  mongodb_data:
-```
-
-This configuration:
-
-1. **MongoDB Service**:
-   - Uses the official MongoDB 6.0 image
-   - Maps the container's port 27017 to `${MONGO_PORT}` on the host
-   - Sets environment variables for database initialization
-   - Enables authentication with `--auth`
-   - Persists data using a named volume (`mongodb_data`)
-   - Includes a healthcheck to verify the database is running
-
-2. **Environment Variables**:
-   - Uses variable substitution (`${VARIABLE_NAME}`) to read from host environment or `.env` file
-   - Makes the configuration flexible across different environments
-
-### Running with Docker Compose
-
-To start the services:
-
-```bash
-docker-compose up -d
-```
-
-To stop the services:
-
-```bash
-docker-compose down
-```
-
-To view logs:
-
-```bash
-docker-compose logs -f
-```
-
-### Environment Variables
-
-The application reads environment variables with sensible defaults:
+To indicate that a variable can be multiple types, use the union operator `|`:
 
 ```python
-# App
-APP_NAME = os.getenv("APP_NAME", "FastAPI Tutorial")
-APP_VERSION = os.getenv("APP_VERSION", "0.1.0")
-APP_DESCRIPTION = os.getenv("APP_DESCRIPTION", "A simple FastAPI application")
-HOST = os.getenv("HOST", "127.0.0.1")
-PORT = int(os.getenv("PORT", "8000"))
-RELOAD = os.getenv("RELOAD", "True").lower() == "true"
-
-# Database
-MONGO_HOST = os.getenv("MONGO_HOST", "localhost")
-MONGO_PORT = int(os.getenv("MONGO_PORT", "27019"))
-MONGO_DB = os.getenv("MONGO_DB", "fastapi_tutorial")
-MONGO_USER = os.getenv("MONGO_USER", "root")
-MONGO_PASSWORD = os.getenv("MONGO_PASSWORD", "example")
-MONGO_AUTH_SOURCE = os.getenv("MONGO_AUTH_SOURCE", "admin")
-MONGO_URI = f"mongodb://{MONGO_USER}:{MONGO_PASSWORD}@{MONGO_HOST}:{MONGO_PORT}/{MONGO_DB}?authSource={MONGO_AUTH_SOURCE}"
+# Two possible types
+number: int | float = 12
 ```
 
-For local development, these defaults work with the Docker Compose configuration. In production, you should set these variables to appropriate values.
+### Collection Types
 
-## API Documentation
+Generic types let you specify container element types:
 
-The application provides multiple API documentation options:
+```python
+# Sequence datatype
+digits: list[int] = [1, 2, 3, 4, 5]
 
-1. **Swagger UI**: Available at `/docs` endpoint
-2. **ReDoc**: Available at `/redoc` endpoint
-3. **Scalar**: Available at `/scalar` endpoint (a more modern alternative)
+# Fixed tuple with specific types
+pair: tuple[str, int] = ("answer", 42)
 
-Documentation is automatically generated from your route definitions and Pydantic models.
+# Variable length tuple with same type
+table_5: tuple[int, ...] = (5, 10, 15, 20, 25)
+
+# Dictionary key and value hinting
+shipment: dict[str, Any] = {
+    "id": 12701,
+    "weight": 1.2,
+    "content": "wooden table",
+    "status": "in transit",
+}
+```
+
+### Custom Types
+
+You can use your own classes as types:
+
+```python
+class City:
+    def __init__(self, name: str, location: int):
+        self.name = name
+        self.location = location
+
+hampshire = City("hampshire", 2048593)
+city_temp: tuple[City, float] = (hampshire, 20.5)
+```
+
+### Callable Types
+
+For functions and other callables:
+
+```python
+from collections.abc import Callable
+
+def my_callback(user_id: int) -> None:
+    pass
+
+def another_callback(user_id: int) -> dict[str, Any]:
+    return {"user_id": user_id}
+
+x: Callable[[int], None] = my_callback
+y: Callable[[int], dict[str, Any]] = another_callback
+
+def process_data(
+    data: dict[str, Any], callback: Callable[..., None]
+) -> Callable[..., None]:
+    user_id = data.get("user_id", 0)
+
+    def proc_func(user_id: int) -> None:
+        callback(user_id)
+
+    return proc_func
+```
+
+### Annotated Type
+
+The `Annotated` type lets you attach metadata to a type annotation without affecting runtime behavior:
+
+```python
+from typing import Annotated
+
+UserID = Annotated[int, "User ID"]
+
+def get_user(user_id: UserID) -> dict:
+    return {"id": user_id}
+```
+
+In FastAPI, `Annotated` is used with `Depends` to specify dependencies:
+
+```python
+from fastapi import Depends, FastAPI
+from typing import Annotated
+
+app = FastAPI()
+
+def get_api_key(api_key: str = Header(...)):
+    return api_key
+
+@app.get("/items/")
+async def read_items(api_key: Annotated[str, Depends(get_api_key)]):
+    return {"api_key": api_key}
+```
+
+## Combining Dependencies and Type Annotations in FastAPI
+
+FastAPI leverages both type annotations and dependency injection to create a robust API framework:
+
+1. **Parameter validation**: Type annotations define the shape of request data
+2. **Dependency injection**: `Depends` injects required components
+3. **Documentation**: Types generate OpenAPI schema docs
+4. **Security**: Type-checked dependencies for authentication
+
+### Best Practices
+
+1. **Be explicit with types**: Use specific types rather than `Any` when possible
+2. **Use dependency injection for cross-cutting concerns**: Auth, logging, database access
+3. **Create reusable dependencies**: Abstract common patterns into shared dependencies
+4. **Leverage type aliases with Annotated**: Define common dependency types
+5. **Document your dependencies**: Add docstrings explaining what each dependency does
+
+### Testing Dependencies
+
+Mock dependencies in tests to isolate components:
+
+```python
+from unittest.mock import MagicMock
+import pytest
+from fastapi.testclient import TestClient
+
+@pytest.fixture
+def mock_greeter():
+    return MagicMock(spec=GreeterService)
+
+@pytest.fixture
+def client(mock_greeter):
+    app.dependency_overrides[get_greeter] = lambda: mock_greeter
+    yield TestClient(app)
+    app.dependency_overrides.clear()
+
+def test_greet_endpoint(client, mock_greeter):
+    mock_greeter.greet.return_value = "Mocked greeting, World!"
+    response = client.get("/greet/World")
+    assert response.status_code == 200
+    assert response.json() == {"message": "Mocked greeting, World!"}
+```
 
 ## References
 
-### FastAPI
-- [FastAPI Documentation](https://fastapi.tiangolo.com/)
-- [FastAPI GitHub Repository](https://github.com/tiangolo/fastapi)
+### FastAPI Documentation
+- [Dependencies in FastAPI](https://fastapi.tiangolo.com/tutorial/dependencies/)
+- [Advanced Dependencies](https://fastapi.tiangolo.com/advanced/advanced-dependencies/)
+- [Dependency Classes](https://fastapi.tiangolo.com/advanced/advanced-dependencies/)
 
-### Beanie ODM
-- [Beanie Documentation](https://beanie-odm.dev/)
-- [Beanie GitHub Repository](https://github.com/roman-right/beanie)
-
-### MongoDB
-- [MongoDB Documentation](https://docs.mongodb.com/)
-- [Motor Documentation](https://motor.readthedocs.io/)
-
-### Docker
-- [Docker Documentation](https://docs.docker.com/)
-- [Docker Compose Documentation](https://docs.docker.com/compose/)
-
-### VS Code
-- [VS Code Documentation](https://code.visualstudio.com/docs)
-- [Python in VS Code](https://code.visualstudio.com/docs/languages/python)
+### Python Type Annotations
+- [Python Type Hints PEP 484](https://peps.python.org/pep-0484/)
+- [Annotated Type PEP 593](https://peps.python.org/pep-0593/)
+- [mypy Documentation](https://mypy.readthedocs.io/)

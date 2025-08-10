@@ -3,12 +3,13 @@ import os
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from datetime import datetime
-from typing import Any, cast
+from typing import Annotated, Any, cast
 
 import motor.motor_asyncio
 import uvicorn
 from beanie import Document, init_beanie
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Request, status
+from fastapi.params import Depends
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 from scalar_fastapi import get_scalar_api_reference
@@ -321,6 +322,49 @@ async def delete_todo(id: int) -> dict[str, str] | None:
         return {"message": "Todo deleted successfully"}
     logger.warning(f"Todo with id {id} not found for deletion")
     return None
+
+
+async def get_greeting() -> str:
+    return "Hello from a dependency!"
+
+
+class GreeterService:
+    def __init__(self, prefix: str = "Hello") -> None:
+        self.prefix: str = prefix
+
+    def greet(self, name: str) -> str:
+        return f"{self.prefix}, {name}!"
+
+
+def get_greeter() -> GreeterService:
+    return GreeterService(prefix="Hello")
+
+
+Greeter = Annotated[GreeterService, Depends(get_greeter)]
+
+
+@app.get("/greet")
+async def greet_with_dependency(
+    greeting: Annotated[str, Depends(get_greeting)],
+) -> dict[str, str]:
+    return {"msg": greeting}
+
+
+@app.get("/greet/{name}")
+def greet(name: str, greeter: Greeter) -> dict[str, str]:
+    return {"message": greeter.greet(name)}
+
+
+def require_api_key(request: Request) -> None:
+    if request.headers.get("x-api-key") != "secret":
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid API key"
+        )
+
+
+@app.get("/protected", dependencies=[Depends(require_api_key)])
+def protected() -> dict[str, bool]:
+    return {"ok": True}
 
 
 @app.get("/scalar")
