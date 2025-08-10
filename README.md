@@ -1,56 +1,33 @@
-# FastAPI Hello World Tutorial
+# RESTful API Methods with FastAPI
 
-This lesson introduces you to FastAPI by building a simple "Hello World" application. FastAPI is a modern, fast (high-performance) web framework for building APIs with Python based on standard Python type hints.
+This lesson introduces you to RESTful API methods using FastAPI. You'll learn how to implement the standard HTTP methods (GET, POST, PUT, PATCH, DELETE) to create a complete CRUD (Create, Read, Update, Delete) API for a Todo list application.
 
-## Prerequisites
+## What is REST?
 
-- Python 3.12+ installed
-- Basic knowledge of Python
-- Understanding of HTTP requests and APIs
+REST (Representational State Transfer) is an architectural style for designing networked applications. RESTful APIs use standard HTTP methods to perform operations on resources, which are typically represented as JSON objects.
 
-## Installation
+## HTTP Methods in REST
 
-### Required Libraries for FastAPI Development
+| Method | Purpose | Idempotent? | Safe? |
+|--------|---------|-------------|-------|
+| GET | Retrieve data | Yes | Yes |
+| POST | Create data | No | No |
+| PUT | Replace data | Yes | No |
+| PATCH | Partially update data | Yes | No |
+| DELETE | Remove data | Yes | No |
 
-To build a complete FastAPI application, you'll need several packages:
+- **Idempotent**: Multiple identical requests have the same effect as a single request
+- **Safe**: Does not modify resources (read-only)
 
-| Package | Purpose |
-|---------|---------|
-| `fastapi` | The core web framework |
-| `uvicorn` | ASGI server to run your application |
-| `pydantic` | Data validation and settings management (included with FastAPI) |
-| `python-multipart` | For form data parsing |
-| `requests` | For making HTTP requests from your app |
-| `PyJWT` | For JSON Web Token authentication |
-| `fastapi-cli` | Command line tools for FastAPI development |
-| `python-jose[cryptography]` | For more advanced JWT with cryptography support |
+## REST Implementation in FastAPI
 
-### Basic Installation
+### Basic Setup
 
-Using uv (recommended for speed and dependency management):
-
-```bash
-uv add fastapi uvicorn
-```
-
-For a complete development setup:
-
-```bash
-uv add fastapi uvicorn python-multipart requests PyJWT fastapi-cli python-jose[cryptography]
-```
-
-If you prefer traditional pip:
-
-```bash
-pip install fastapi uvicorn
-```
-
-## Understanding Our Hello World Application
-
-Let's break down our `main.py` file:
+Our FastAPI application is configured with environment variables for flexibility:
 
 ```python
 import os
+from typing import Any
 from fastapi import FastAPI
 import uvicorn
 
@@ -61,277 +38,321 @@ APP_DESCRIPTION = os.getenv("APP_DESCRIPTION", "A simple FastAPI application")
 HOST = os.getenv("HOST", "127.0.0.1")
 PORT = int(os.getenv("PORT", "8000"))
 RELOAD = os.getenv("RELOAD", "True").lower() == "true"
+```
+
+We've created a sample todos list to work with:
+
+```python
+todos = [
+    {"id": 1, "task": "Learn FastAPI", "completed": False, "time": "2023-10-01T09:00:00", "priority": 1, "rate": 4.5},
+    {"id": 2, "task": "Build a REST API", "completed": False, "time": "2023-10-02T10:00:00", "priority": 2, "rate": 3.8},
+    {"id": 3, "task": "Deploy to production", "completed": False, "time": "2023-10-03T11:00:00", "priority": 3, "rate": 4.2},
+]
 
 # Create FastAPI instance
-app = FastAPI(
-    title=APP_NAME,
-    description=APP_DESCRIPTION,
-    version=APP_VERSION
-)
+app = FastAPI(title=APP_NAME, description=APP_DESCRIPTION, version=APP_VERSION)
+```
 
-# Define a route
-@app.get("/")
-async def hello_world() -> dict[str, str]:
-    return {"message": f"Hello from {APP_NAME}!"}
+## Implementing REST Methods
 
-# Original main function (can be used for non-API functionality)
-def main() -> None:
-    print(f"Hello from {APP_NAME}!")
+### 1. POST Method - Creating Resources
+
+The POST method is used to create new resources. In our example, it creates new todo items:
+
+```python
+@app.post("/todos")
+async def create_todo(todo: dict[str, Any] | list[dict[str, Any]]) -> dict[str, Any]:
+    if isinstance(todo, list):
+        for item in todo:
+            item["id"] = len(todos) + 1
+            todos.append(item)
+        return {"message": "Todos created successfully"}
+    else:
+        todo["id"] = len(todos) + 1
+        todos.append(todo)
+        return todo
+```
+
+**Key Features:**
+- Accepts either a single todo item or a list of todos
+- Automatically generates IDs for new items
+- Returns the created todo or a success message
+
+**Usage Example:**
+```bash
+# Create a single todo
+curl -X POST "http://127.0.0.1:8000/todos" \
+  -H "Content-Type: application/json" \
+  -d '{"task": "Learn REST APIs", "completed": false, "priority": 1, "rate": 5.0}'
+```
+
+### 2. GET Method - Reading Resources
+
+The GET method retrieves resources. It can retrieve all todos or filter them based on criteria:
+
+```python
+@app.get("/todos")
+async def read_todos(filters: dict[str, Any] | None = None) -> list[dict[str, Any]]:
+    if not filters:
+        return todos
+    filtered_todos = []
+    for todo in todos:
+        match = True
+        for key, value in filters.items():
+            if key in todo and todo[key] != value:
+                match = False
+                break
+        if match:
+            filtered_todos.append(todo)
+    return filtered_todos
+```
+
+**Key Features:**
+- Returns all todos when no filters are provided
+- Supports filtering by any todo property
+- Returns a list of matching todos
+
+**Usage Example:**
+```bash
+# Get all todos
+curl "http://127.0.0.1:8000/todos"
+
+# Get todos filtered by completion status
+curl "http://127.0.0.1:8000/todos?filters.completed=false"
+```
+
+We also have a method to get a single todo by ID:
+
+```python
+@app.post("/todos/{id}")
+def get_todo(id: int) -> dict[str, Any] | None:
+    for todo in todos:
+        if todo["id"] == id:
+            return todo
     return None
-
-# Run the API with uvicorn when script is executed
-if __name__ == "__main__":
-    uvicorn.run("main:app", host=HOST, port=PORT, reload=RELOAD)
 ```
 
-### Code Explanation
+**Note:** This should actually be a GET method according to REST principles. We'll correct this issue later.
 
-1. **Imports**:
-   - `os`: Used to access environment variables
-   - `FastAPI`: The main class from FastAPI
-   - `uvicorn`: ASGI server for running our FastAPI application
+### 3. PATCH Method - Partially Updating Resources
 
-2. **Environment Variables**:
-   - We use `os.getenv()` to get configuration from environment variables
-   - Default values are provided if environment variables aren't set
-   - This makes our app configurable without changing code
+The PATCH method is used for partial updates to a resource:
 
-3. **FastAPI Instance**:
-   - We create an instance of `FastAPI` with metadata like title and version
-   - This metadata is used in the automatic API documentation
+```python
+@app.patch("/todos/{id}")
+def update_todo(id: int, updates: dict[str, Any]) -> dict[str, Any] | None:
+    todo = get_todo(id)
+    if todo:
+        todo.update(updates)
+        return todo
+    return None
+```
 
-4. **Route Definition**:
-   - `@app.get("/")` is a decorator that tells FastAPI this function handles GET requests to "/"
-   - Our function returns a JSON object with a greeting message
-   - Type annotations (`-> dict[str, str]`) help FastAPI validate and document the response
+**Key Features:**
+- Updates only the specified fields
+- Preserves other fields
+- Returns the updated todo or None if not found
 
-5. **Main Function**:
-   - A simple function to demonstrate non-API usage
-   - Returns `None` as specified by the type annotation
-
-6. **Running the Application**:
-   - When script is run directly, we start the Uvicorn server
-   - We pass configuration from our environment variables
-
-## Running the Application
-
-There are multiple ways to run this FastAPI application. Let's explore each method with its advantages:
-
-### Method 1: Using Python directly
-
+**Usage Example:**
 ```bash
-python main.py
+# Update the completion status of a todo
+curl -X PATCH "http://127.0.0.1:8000/todos/1" \
+  -H "Content-Type: application/json" \
+  -d '{"completed": true}'
 ```
 
-**How it works:**
-- This runs your Python script directly, which in turn calls `uvicorn.run()` from your code
-- Uses the environment variables and defaults defined in your script
-- Simple and straightforward - just one command to remember
+### 4. PUT Method - Replacing Resources
 
-**Best when:**
-- You want to use the configuration defined in your code
-- You're explaining the application to beginners
-- You want to maintain the same startup configuration across environments
+The PUT method replaces an entire resource with a new version:
 
-### Method 2: Using Uvicorn CLI directly
+```python
+@app.put("/todos/{id}")
+def upudate_todo(id: int, todo: dict[str, Any]) -> dict[str, Any] | None:
+    existing_todo = get_todo(id)
+    if existing_todo:
+        existing_todo.update(todo)
+        return existing_todo
+    return None
+```
 
+**Key Features:**
+- Conceptually replaces the entire resource
+- Returns the updated todo or None if not found
+
+**Note:** In a true PUT implementation, if fields are not included in the request, they should be removed from the resource. Our implementation currently acts like PATCH.
+
+**Usage Example:**
 ```bash
-uvicorn main:app --host 127.0.0.1 --port 8000 --reload
+# Replace a todo completely
+curl -X PUT "http://127.0.0.1:8000/todos/2" \
+  -H "Content-Type: application/json" \
+  -d '{"task": "Learn PUT vs PATCH", "completed": true, "priority": 2, "rate": 4.0, "time": "2023-10-05T15:00:00"}'
 ```
 
-**How it works:**
-- Directly calls the Uvicorn ASGI server to run your application
-- `main:app` refers to the `app` object in the `main.py` file
-- Parameters override any defaults in your code
+### 5. DELETE Method - Removing Resources
 
-**Best when:**
-- You need to override settings without changing code
-- You're working with different environments
-- You need more control over server parameters
+The DELETE method removes a resource:
 
-### Method 3: Using FastAPI CLI tools
+```python
+@app.delete("/todos/{id}")
+def delete_todo(id: int) -> dict[str, str] | None:
+    todo = get_todo(id)
+    if todo:
+        todos.remove(todo)
+        return {"message": "Todo deleted successfully"}
+    return None
+```
 
-FastAPI provides several CLI tools to enhance your development experience. First, install the FastAPI CLI package:
+**Key Features:**
+- Removes the todo with the specified ID
+- Returns a success message or None if not found
 
+**Usage Example:**
 ```bash
-uv add fastapi-cli
+# Delete a todo
+curl -X DELETE "http://127.0.0.1:8000/todos/3"
 ```
 
-#### Using fastapi run
+## Best Practices and Improvements
 
-The most basic command is `fastapi run` which is a wrapper around uvicorn with sensible defaults:
+Looking at our code, here are some improvements we could make:
 
-```bash
-fastapi run main:app --reload
+1. **Fix the get_todo method**: It should use @app.get instead of @app.post:
+```python
+@app.get("/todos/{id}")  # Changed from post to get
+def get_todo(id: int) -> dict[str, Any] | None:
+    for todo in todos:
+        if todo["id"] == id:
+            return todo
+    return None
 ```
 
-**How it works:**
-- Similar to uvicorn but with pre-configured settings
-- Handles common configuration automatically
-- Still requires you to specify the application module
-
-#### Using fastapi dev
-
-For an enhanced development experience with hot-reloading and debugging tools:
-
-```bash
-fastapi dev
+2. **Implement proper PUT semantics**: Our PUT method should replace the entire resource:
+```python
+@app.put("/todos/{id}")
+def replace_todo(id: int, new_todo: dict[str, Any]) -> dict[str, Any] | None:
+    for i, todo in enumerate(todos):
+        if todo["id"] == id:
+            # Preserve the ID, but replace everything else
+            new_todo["id"] = id
+            todos[i] = new_todo
+            return todos[i]
+    return None
 ```
 
-or with specific module:
+3. **Use Pydantic models**: Instead of using dict[str, Any], define proper Pydantic models:
+```python
+from pydantic import BaseModel, Field
+from typing import Optional
+from datetime import datetime
 
-```bash
-fastapi dev main:app
+class TodoBase(BaseModel):
+    task: str
+    completed: bool = False
+    priority: int = Field(gt=0, lt=6)
+    rate: float = Field(ge=0, le=5)
+
+class TodoCreate(TodoBase):
+    pass
+
+class TodoUpdate(BaseModel):
+    task: Optional[str] = None
+    completed: Optional[bool] = None
+    priority: Optional[int] = Field(None, gt=0, lt=6)
+    rate: Optional[float] = Field(None, ge=0, le=5)
+
+class Todo(TodoBase):
+    id: int
+    time: datetime
 ```
 
-**How it works:**
-- Simply running `fastapi dev` in your project directory will automatically detect your FastAPI app
-- Starts a development server with best-practice settings
-- Provides enhanced error messages and colorful logs
-- Includes automatic reloading on code changes
-- Offers improved debugging information
+4. **Add proper error handling**: Return appropriate status codes:
+```python
+from fastapi import HTTPException, status
 
-**Best when:**
-- You're actively developing and debugging
-- You want the simplest possible command to run your app
-- You need the most developer-friendly experience
-
-#### Comparison of Methods
-
-| Method | Command | Ease of Use | Customization | Dev Features |
-|--------|---------|-------------|--------------|--------------|
-| Python | `python main.py` | ★★★★☆ | ★★☆☆☆ | ★☆☆☆☆ |
-| Uvicorn | `uvicorn main:app` | ★★★☆☆ | ★★★★★ | ★★☆☆☆ |
-| FastAPI Run | `fastapi run main:app` | ★★★☆☆ | ★★★☆☆ | ★★★☆☆ |
-| FastAPI Dev | `fastapi dev` | ★★★★★ | ★★☆☆☆ | ★★★★★ |
-
-#### Additional CLI features
-
-FastAPI CLI also offers:
-
-```bash
-# Create a new project scaffold
-fastapi new my-project
-
-# Run tests
-fastapi test
-
-# Generate OpenAPI schema
-fastapi schema main:app -o openapi.json
+@app.get("/todos/{id}")
+def get_todo(id: int) -> Todo:
+    for todo in todos:
+        if todo["id"] == id:
+            return todo
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=f"Todo with id {id} not found"
+    )
 ```
 
-These tools streamline the development workflow, especially for beginners.
+## The Pure Python Approach
 
-## Exploring Your API
+In `examples/rest_methods.py`, we have implemented similar functionality without the web framework:
 
-Once running, you can:
+```python
+def create_todo(task: str, priority: int, rate: float) -> dict[str, Any]:
+    new_todo = {
+        "id": len(todos) + 1,
+        "task": task,
+        "completed": False,
+        "time": datetime.now().isoformat(),
+        "priority": priority,
+        "rate": rate,
+    }
+    todos.append(new_todo)
+    return new_todo
 
-1. **Access your API**: Visit http://127.0.0.1:8000 in your browser or use tools like curl:
-   ```bash
-   curl http://127.0.0.1:8000
-   ```
-   You should see: `{"message":"Hello from FastAPI Tutorial!"}`
+def get_todos(filters: dict[str, Any] | None = None) -> list[dict[str, Any]]:
+    # Similar to the FastAPI implementation
+    # ...
 
-2. **Interactive API documentation**: FastAPI automatically generates interactive documentation:
-   - Swagger UI: http://127.0.0.1:8000/docs
-   - ReDoc: http://127.0.0.1:8000/redoc
+def patch_todo(todo_id: int, updates: dict[str, Any]) -> dict[str, Any] | None:
+    # Similar to the FastAPI implementation
+    # ...
 
-3. **OpenAPI Schema**: Access your API's OpenAPI schema at http://127.0.0.1:8000/openapi.json
+def update_todo(todo_id: int, updates: dict[str, Any]) -> dict[str, Any] | None:
+    # Similar to the FastAPI implementation
+    # ...
 
-## Using Environment Variables
-
-Our app reads configuration from environment variables. You can set these before running:
-
-```bash
-# Unix/Linux/Mac
-export APP_NAME="My Custom API"
-export PORT=9000
-
-# Windows
-set APP_NAME=My Custom API
-set PORT=9000
+def delete_todo(todo_id: int) -> bool:
+    global todos
+    todos = [t for t in todos if t["id"] != todo_id]
+    return True
 ```
 
-Or create a `.env` file in your project root with:
+This shows that REST principles can be implemented even in non-web contexts, as they simply represent operations on resources.
 
-```
-APP_NAME=My Custom API
-PORT=9000
-```
+## REST Method Summary
 
-## Package Management with uv
+| Method | Path | Function | Description |
+|--------|------|----------|-------------|
+| POST | /todos | create_todo | Create a new todo or batch of todos |
+| GET | /todos | read_todos | Retrieve all todos (with optional filtering) |
+| GET | /todos/{id} | get_todo | Retrieve a specific todo by ID |
+| PATCH | /todos/{id} | update_todo | Partially update a todo |
+| PUT | /todos/{id} | replace_todo | Replace a todo completely |
+| DELETE | /todos/{id} | delete_todo | Remove a todo |
 
-In this tutorial, we're using `uv` as our Python package manager. It's a faster alternative to pip with improved dependency resolution.
+## Key Takeaways
 
-### Basic uv Commands
+1. **REST uses standard HTTP methods** to perform CRUD operations on resources
+2. **GET** is for reading and should never modify data
+3. **POST** creates new resources and generates IDs
+4. **PUT** replaces resources completely
+5. **PATCH** updates resources partially
+6. **DELETE** removes resources
+7. **Idempotent methods** (GET, PUT, PATCH, DELETE) can be safely retried
+8. **URL paths** should identify resources, not actions
 
-```bash
-# Install packages
-uv add package-name
+## Exercises
 
-# Install multiple packages
-uv add package1 package2 package3
-
-# Install specific versions
-uv add fastapi==0.100.0
-
-# Install from requirements.txt
-uv pip sync requirements.txt
-
-# Create/update lockfile
-uv pip compile requirements.txt -o uv.lock
-
-# Create a new virtual environment
-uv venv
-
-# Install development dependencies
-uv add --dev pytest pytest-cov black
-```
-
-### Setting Up a FastAPI Project with uv
-
-Here's a complete setup process for a new FastAPI project:
-
-```bash
-# Create project directory
-mkdir my_fastapi_project && cd my_fastapi_project
-
-# Create virtual environment
-uv venv
-
-# Activate environment (Unix/macOS)
-source .venv/bin/activate
-
-# Activate environment (Windows)
-.venv\Scripts\activate
-
-# Install core dependencies
-uv add fastapi uvicorn
-
-# Install development dependencies
-uv add --dev pytest httpx
-
-# Create lockfile
-uv pip freeze > requirements.txt
-uv pip compile requirements.txt -o uv.lock
-```
-
-The `uv.lock` file ensures reproducible builds across different environments.
-
-**Why uv?**
-- Up to 10-100x faster than pip
-- Better dependency resolution
-- Lockfile support for reproducible environments
-- Compatible with pip's command structure
-- Built-in virtual environment management
+1. Add validation to ensure todos have required fields
+2. Implement a search endpoint that finds todos by task name
+3. Add a status code 201 (Created) to the POST method
+4. Fix the get_todo method to use GET instead of POST
+5. Improve the PUT implementation to truly replace resources
 
 ## Next Steps
 
-Try these modifications to learn more:
-1. Add a new route with a different path
-2. Return different types of data
-3. Add path parameters to your routes
-4. Add query parameters
-5. Explore request bodies and POST methods
-
-FastAPI's official documentation is excellent for further learning: https://fastapi.tiangolo.com/
+In future lessons, we'll explore:
+- Advanced request validation with Pydantic
+- Authentication and authorization
+- Database integration with SQLAlchemy
+- API versioning
+- Documentation with Swagger/OpenAPI
