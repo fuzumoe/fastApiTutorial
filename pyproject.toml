@@ -1,0 +1,105 @@
+[project]
+name = "fastApiTutorial"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+ "beanie>=2.0.0",
+ "fastapi>=0.116.1",
+ "mypy>=1.17.1",
+ "pydantic>=2.11.7",
+ "pyjwt>=2.10.1",
+ "pytest>=8.4.1",
+ "pyyaml>=6.0.2",
+ "ruff>=0.12.8",
+]
+
+
+[tool.ruff]
+# Set the maximum line length to 88 (Black's default).
+line-length = 88
+
+# Assume Python 3.12+
+target-version = "py312"
+
+
+# Exclude directories from linting
+exclude = [
+    ".git",
+    "__pycache__",
+    ".venv",
+    "venv",
+    "build",
+    "dist",
+    "migrations",
+    "migrations_dumps",
+    ".ruff_cache",
+    "docker-compose.yaml"
+]
+
+[tool.ruff.lint]
+# Enable specific rule sets
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # Pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+    "N",   # pep8-naming
+    "S",   # flake8-bandit
+    "SIM", # flake8-simplify
+    "PTH", # flake8-use-pathlib
+]
+
+# Ignore specific rules
+ignore = [
+    "S101",   # Use of assert
+    "T201",   # Print statements (useful for tutorials)
+    "B008",   # Do not perform function calls in argument defaults
+    "S105",   # Possible hardcoded password
+    "S106",   # Possible hardcoded password
+    "S107",   # Possible hardcoded password
+    "S603",   # subprocess call - we need this for the CLI
+    "DTZ",    # All datetime timezone rules (tutorial code)
+    "RUF012", # Mutable class attributes (Beanie Settings pattern)
+    "RUF022", # __all__ sorting
+]
+
+# Per-file ignores
+[tool.ruff.lint.per-file-ignores]
+# Allow print statements in example files, main.py, and scripts
+"main.py" = ["T201"]
+"scripts/*" = ["T201"]
+
+# Allow star imports in __init__.py files
+"__init__.py" = ["F401", "F403"]
+
+# Allow specific patterns in model files
+"app/models/articles.py" = ["DTZ003", "DTZ005", "RUF012"]
+"app/models/comments.py" = ["DTZ003", "DTZ005", "RUF012"]
+"app/models/users.py" = ["DTZ003", "DTZ005", "RUF012"]
+"app/models/__init__.py" = ["F401", "F403", "RUF022"]
+
+# Allow all issues in migration files
+"migrations_dumps/*" = ["ALL"]
+
+
+[tool.ruff.lint.isort]
+# Sort imports
+known-first-party = ["app"]
+force-single-line = false
+
+[tool.ruff.format]
+# Use single quotes for strings
+
+quote-style = "double"
+# Use trailing commas
+skip-magic-trailing-comma = false
+
+[tool.ruff.lint.pydocstyle]
+
+# Use Google-style docstrings
+convention = "google"
