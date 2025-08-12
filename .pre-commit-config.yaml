@@ -27,7 +27,7 @@ repos:
     hooks:
       - id: commit-msg-format
         name: Validate commit message format
-        entry: /opt/adam/scoffy/.venv/bin/python -c "import sys; msg = open(sys.argv[1]).read(); sys.exit(0 if msg.strip() and len(msg.split('\n')[0]) <= 72 else 1)"
+        entry: /opt/adam/fastapi-tutorial/.venv/bin/python -c "import sys; msg = open(sys.argv[1]).read(); sys.exit(0 if msg.strip() and len(msg.split('\n')[0]) <= 72 else 1)"
         language: system
         stages: [commit-msg]
         always_run: true
