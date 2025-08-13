@@ -9,11 +9,12 @@ It’s like wrapping a gift:
 🎀 The ribbon = extra behavior you add with the decorator.
 
 2. Why use decorators?
-To avoid repeating code.
 
-To add functionality without changing the original function’s code.
+- To avoid repeating code.
 
-To separate core logic from extra logic like logging, timing, authentication, etc.
+- To add functionality without changing the original function’s code.
+
+- To separate core logic from extra logic like logging, timing, authentication, etc.
 """
 
 # 3. Basic example without decorator syntax
