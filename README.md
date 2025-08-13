@@ -8,19 +8,27 @@ This repository contains a series of lessons demonstrating how to build robust A
    * Basic project structure and tooling setup
    * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/01-scaffoling-0/README.md)
    * **Vidoes**
-    1.  content: https://us06web.zoom.us/rec/share/91J-tCCYDnILQrD4U2MR1yoLLwiaw8S0QkDisdDLzLU5PYd5Mmkw7GiGEvcmkO7u.qpBWwXNVgRfY-z0N?startTime=1754928726000
-      Passcode: B=*0cP50
+    1. content: https://us06web.zoom.us/rec/share/91J-tCCYDnILQrD4U2MR1yoLLwiaw8S0QkDisdDLzLU5PYd5Mmkw7GiGEvcmkO7u.qpBWwXNVgRfY-z0N?startTime=1754928726000
+       Passcode: B=*0cP50
+
     2. content: https://us06web.zoom.us/rec/share/iqzC6NeX40cZ4dBOIzrglhXpFMTffI7RkdIhCgCgdK81inpSDImyj5FF-6kX9tgJ.MLmWO3tQrQPvXear?startTime=1755014738000
-      Passcode: yvZ+@*3B
+       Passcode: yvZ+@*3B
 
     3. content: https://us06web.zoom.us/rec/share/iqzC6NeX40cZ4dBOIzrglhXpFMTffI7RkdIhCgCgdK81inpSDImyj5FF-6kX9tgJ.MLmWO3tQrQPvXear?startTime=1755016307000
-      Passcode: yvZ+@*3B
+       Passcode: yvZ+@*3B
 ---
 2. **Hello World with FastAPI** - [Branch: 02-fast-api-hello-world]
    * Creating your first FastAPI application
    * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/02-fast-api-hello-world/README.md)
-   * Vidoes [COMMING SOON]
-
+   * **Vidoes**
+    1. content: https://us06web.zoom.us/rec/share/fDSgKDLgNCvtwtw5WjWVehBl5WSGh4bgSP3OJGoLoFGS1-oj6IiybTracEFCa_Ge.b-CuA201-bYs6RmQ?startTime=1755101176000
+       Passcode: HRM@r5tT
+    2. content: https://us06web.zoom.us/rec/share/fDSgKDLgNCvtwtw5WjWVehBl5WSGh4bgSP3OJGoLoFGS1-oj6IiybTracEFCa_Ge.b-CuA201-bYs6RmQ?startTime=1755102003000
+       Passcode: HRM@r5tT
+    3. content: https://us06web.zoom.us/rec/share/fDSgKDLgNCvtwtw5WjWVehBl5WSGh4bgSP3OJGoLoFGS1-oj6IiybTracEFCa_Ge.b-CuA201-bYs6RmQ?startTime=1755102966000
+       Passcode: HRM@r5tT
+    4. content: https://us06web.zoom.us/rec/share/fDSgKDLgNCvtwtw5WjWVehBl5WSGh4bgSP3OJGoLoFGS1-oj6IiybTracEFCa_Ge.b-CuA201-bYs6RmQ?startTime=1755103973000
+       Passcode: HRM@r5tT
 3. **REST Methods** - [Branch: 03-fast-api-rest-methods]
    * Implementing different HTTP methods (GET, POST, PUT, PATCH, DELETE)
    * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/03-fast-api-rest-methods/README.md)
