@@ -32,6 +32,9 @@ This repository contains a series of lessons demonstrating how to build robust A
 3. **REST Methods** - [Branch: 03-fast-api-rest-methods]
    * Implementing different HTTP methods (GET, POST, PUT, PATCH, DELETE)
    * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/03-fast-api-rest-methods/README.md)
+   * **Vidoes**
+    1. content: https://us06web.zoom.us/rec/share/s4DT6LkcRo2RGQhS1cdA1_xhQNndIo8VLyzItlyQpMrnTMbnBYhoY-tYcXoV8qxL.InORGi30AYPQWd1C?startTime=1755188031000
+      Passcode: nT@3j3%4
 
 ---
 4. **Pydantic Schemas** - [Branch: 04-fast-api-pydantic-schemas]
