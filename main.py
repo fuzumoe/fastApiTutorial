@@ -1,5 +1,5 @@
 import os
-from typing import Any
+from typing import TypeAlias
 
 import uvicorn
 from fastapi import FastAPI
@@ -15,7 +15,9 @@ PORT = int(os.getenv("PORT", "8000"))
 RELOAD = os.getenv("RELOAD", "True").lower() == "true"
 
 
-todos = [
+Todo: TypeAlias = dict[str, int | float | str | bool]
+
+todos: list[Todo] = [
     {
         "id": 1,
         "task": "Learn FastAPI",
@@ -46,65 +48,82 @@ app = FastAPI(title=APP_NAME, description=APP_DESCRIPTION, version=APP_VERSION)
 
 
 @app.post("/todos")
-async def create_todo(todo: dict[str, Any] | list[dict[str, Any]]) -> dict[str, Any]:
-    if isinstance(todo, list):
-        for item in todo:
+async def crate_todo(
+    payload: Todo | list[Todo],
+) -> Todo | list[Todo]:
+    if isinstance(payload, list):
+        for item in payload:
             item["id"] = len(todos) + 1
+            item["rate"] = float(item["rate"])
             todos.append(item)
-        return {"message": "Todos created successfully"}
-    else:
-        todo["id"] = len(todos) + 1
-        todos.append(todo)
-        return todo
+    else:  # {}
+        payload["id"] = len(todos) + 1
+        payload["rate"] = float(payload["rate"])
+        todos.append(payload)
+    return payload
 
 
 @app.get("/todos")
-async def read_todos(filters: dict[str, Any] | None = None) -> list[dict[str, Any]]:
-    if not filters:
-        return todos
-    filtered_todos = []
-    for todo in todos:
-        match = True
-        for key, value in filters.items():
-            if key in todo and todo[key] != value:
-                match = False
-                break
-        if match:
-            filtered_todos.append(todo)
+def read_todos(
+    id: int | None = None,
+    task: str | None = None,
+    completed: bool | None = None,
+    priority: int | None = None,
+    rate: float | None = None,
+    time: str | None = None,
+) -> list[Todo]:
+    filtered_todos = todos.copy()
+    if id is not None:
+        filtered_todos = [item for item in todos if item["id"] == id]
+    if task is not None:
+        filtered_todos = [item for item in todos if item["task"] == task]
+    if completed is not None:
+        filtered_todos = [item for item in todos if item["completed"] == completed]
+    if priority is not None:
+        filtered_todos = [item for item in todos if item["priority"] == priority]
+    if rate is not None:
+        filtered_todos = [item for item in todos if item["rate"] == rate]
+    if time is not None:
+        filtered_todos = [item for item in todos if item["time"] == time]
+
     return filtered_todos
 
 
-@app.post("/todos/{id}")
-def get_todo(id: int) -> dict[str, Any] | None:
-    for todo in todos:
-        if todo["id"] == id:
-            return dict(todo)  # Explicitly return as dict
+@app.get("/todos/{id}")
+def get_resource(id: int) -> Todo | None:
+    for item in todos:
+        if item["id"] == id:
+            return item
     return None
 
 
 @app.patch("/todos/{id}")
-def update_todo(id: int, updates: dict[str, Any]) -> dict[str, Any] | None:
-    todo = get_todo(id)
-    if todo:
-        todo.update(updates)
-        return dict(todo)  # Explicitly return as dict
-    return None
+def partial_update(id: int, updates: Todo) -> Todo | None:
+    result = None
+    existing_todo = get_resource(id)
+    if existing_todo:
+        existing_todo.update(updates)
+        result = get_resource(id)
+
+    return result
 
 
 @app.put("/todos/{id}")
-def upudate_todo(id: int, todo: dict[str, Any]) -> dict[str, Any] | None:
-    existing_todo = get_todo(id)
+def update(id: int, updates: Todo) -> Todo | None:
+    result = None
+    existing_todo = get_resource(id)
     if existing_todo:
-        existing_todo.update(todo)
-        return dict(existing_todo)  # Explicitly return as dict
-    return None
+        existing_todo.update(updates)
+        result = get_resource(id)
+
+    return result
 
 
 @app.delete("/todos/{id}")
 def delete_todo(id: int) -> dict[str, str] | None:
-    todo = get_todo(id)
-    if todo:
-        todos.remove(todo)
+    existing_todo = get_resource(id)
+    if existing_todo:
+        todos.remove(existing_todo)
         return {"message": "Todo deleted successfully"}
     return None
 
