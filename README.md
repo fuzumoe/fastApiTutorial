@@ -1,94 +1,62 @@
-# FastAPI Tutorial Lessons
+# Python 3.10+ ONLY (use built-in generics: list, dict, tuple, and | for unions)
 
-This repository contains a series of lessons demonstrating how to build robust APIs with FastAPI.
+def find_max(numbers):
+    """Return the maximum number in the list, or None if empty."""
+    if not numbers:
+        return None
+    return max(numbers)
 
-## Lessons Overview
+def word_frequencies(words):
+    """Return a dictionary mapping each word to its frequency."""
+    freq = {}
+    for word in words:
+        freq[word] = freq.get(word, 0) + 1
+    return freq
 
-1. **Project Scaffolding** - [Branch: 01-scaffoling-0]
-   * Basic project structure and tooling setup
-   * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/01-scaffoling-0/README.md)
-   * **Vidoes**
-    1. content: https://us06web.zoom.us/rec/share/91J-tCCYDnILQrD4U2MR1yoLLwiaw8S0QkDisdDLzLU5PYd5Mmkw7GiGEvcmkO7u.qpBWwXNVgRfY-z0N?startTime=1754928726000
-       Passcode: B=*0cP50
+def get_student_record(student_id, student_data):
+    """
+    Return a tuple of (id, name, courses) for the given student_id.
+    courses is a list of course names.
+    Return None if not found.
+    """
+    data = student_data.get(student_id)
+    if not data:
+        return None
+    return (student_id, data["name"], data["courses"])
 
-    2. content: https://us06web.zoom.us/rec/share/iqzC6NeX40cZ4dBOIzrglhXpFMTffI7RkdIhCgCgdK81inpSDImyj5FF-6kX9tgJ.MLmWO3tQrQPvXear?startTime=1755014738000
-       Passcode: yvZ+@*3B
+def average_grades(grades):
+    """Return the average of grades in the list, rounded to 2 decimals; None if empty."""
+    if not grades:
+        return None
+    return round(sum(grades) / len(grades), 2)
 
-    3. content: https://us06web.zoom.us/rec/share/iqzC6NeX40cZ4dBOIzrglhXpFMTffI7RkdIhCgCgdK81inpSDImyj5FF-6kX9tgJ.MLmWO3tQrQPvXear?startTime=1755016307000
-       Passcode: yvZ+@*3B
----
-2. **Hello World with FastAPI** - [Branch: 02-fast-api-hello-world]
-   * Creating your first FastAPI application
-   * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/02-fast-api-hello-world/README.md)
-   * **Vidoes**
-    1. content: https://us06web.zoom.us/rec/share/fDSgKDLgNCvtwtw5WjWVehBl5WSGh4bgSP3OJGoLoFGS1-oj6IiybTracEFCa_Ge.b-CuA201-bYs6RmQ?startTime=1755101176000
-       Passcode: HRM@r5tT
-    2. content: https://us06web.zoom.us/rec/share/fDSgKDLgNCvtwtw5WjWVehBl5WSGh4bgSP3OJGoLoFGS1-oj6IiybTracEFCa_Ge.b-CuA201-bYs6RmQ?startTime=1755102003000
-       Passcode: HRM@r5tT
-    3. content: https://us06web.zoom.us/rec/share/fDSgKDLgNCvtwtw5WjWVehBl5WSGh4bgSP3OJGoLoFGS1-oj6IiybTracEFCa_Ge.b-CuA201-bYs6RmQ?startTime=1755102966000
-       Passcode: HRM@r5tT
-    4. content: https://us06web.zoom.us/rec/share/fDSgKDLgNCvtwtw5WjWVehBl5WSGh4bgSP3OJGoLoFGS1-oj6IiybTracEFCa_Ge.b-CuA201-bYs6RmQ?startTime=1755103973000
-       Passcode: HRM@r5tT
-3. **REST Methods** - [Branch: 03-fast-api-rest-methods]
-   * Implementing different HTTP methods (GET, POST, PUT, PATCH, DELETE)
-   * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/03-fast-api-rest-methods/README.md)
-   * **Vidoes**
-    1. content: https://us06web.zoom.us/rec/share/s4DT6LkcRo2RGQhS1cdA1_xhQNndIo8VLyzItlyQpMrnTMbnBYhoY-tYcXoV8qxL.InORGi30AYPQWd1C?startTime=1755188031000
-      Passcode: nT@3j3%4
+class Library:
+    def __init__(self):
+        self.books = {}
 
----
-4. **Pydantic Schemas** - [Branch: 04-fast-api-pydantic-schemas]
-   * Data validation and serialization with Pydantic
-   * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/04-fast-api-pydantic-schemas/README.md)
-   * Vidoes [COMMING SOON]
+    def add_book(self, title, author, year):
+        self.books[title] = {"author": author, "year": year}
 
----
-5. **Beanie ODM** - [Branch: 05-fast-api-beanie-odm]
-   * MongoDB integration with Beanie ODM
-   * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/05-fast-api-beanie-odm/README.md)
+    def find_books_by_author(self, author):
+        return [title for title, info in self.books.items() if info["author"] == author]
 
---- * Vidoes [COMMING SOON]
+# Example usage (should still run after you add hints)
+numbers = [10, 20, 30]
+print(find_max(numbers))
 
-6. **Dependencies** - [Branch: 06-fast-api-dependencies]
-   * Dependency injection and type annotations
-   * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/06-fast-api-dependencies/README.md)
-   * Vidoes [COMMING SOON]
----
-7. **App Scaffolding** - [Branch: 07-app-scaffolding]
-   * Structuring a larger FastAPI application
-   * Best practices for project organization
-   * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/07-app-scaffolding/README.md)
-   * Vidoes [COMMING SOON]
+words = ["apple", "banana", "apple", "cherry"]
+print(word_frequencies(words))
 
----
-8. **App Configuring** - [Branch: 08-app-configuring]
-   * Environment-based configuration management
-   * Settings management with Pydantic
-   * Secrets handling and environment variables
-   * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/08-app-configuring/README.md)
-   * Vidoes [COMMING SOON]
+students = {
+    1: {"name": "Alice", "courses": ["Math", "Physics"]},
+    2: {"name": "Bob", "courses": ["History"]}
+}
+print(get_student_record(1, students))
 
-9. **Model View Controller (MVC)** - [Branch: 09-mvc]
-   * Implementing MVC pattern in FastAPI
-   * Separating business logic, data models, and presentation
-   * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/09-mvc/README.md)
-   * Vidoes [COMMING SOON]
+grades = [85.5, 90.0, 78.5]
+print(average_grades(grades))
 
----
-10. **Authentication** - [Branch: 10-authentication]
-   * Implementing JWT-based authentication
-   * User registration and login flows
-   * Securing routes with dependencies
-   * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/10-authentication/README.md)
-   * Vidoes [COMMING SOON]
-
----
-11. **Middlewares** - [Branch: 11-middlewares]
-   * Creating custom middlewares
-   * Request/response modification
-   * Cross-cutting concerns (logging, CORS, rate limiting)
-   * Middleware execution order
-   * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/11-middlewares/README.md)
-   * Vidoes [COMMING SOON]
-
----
+lib = Library()
+lib.add_book("1984", "George Orwell", 1949)
+lib.add_book("Animal Farm", "George Orwell", 1945)
+print(lib.find_books_by_author("George Orwell"))
