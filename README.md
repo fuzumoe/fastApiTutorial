@@ -40,7 +40,8 @@ This repository contains a series of lessons demonstrating how to build robust A
 4. **Pydantic Schemas** - [Branch: 04-fast-api-pydantic-schemas]
    * Data validation and serialization with Pydantic
    * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/04-fast-api-pydantic-schemas/README.md)
-   * Vidoes [COMMING SOON]
+   * **Vidoes**
+   1. https://us06web.zoom.us/rec/share/yGFjMyzmLGxRECqvGaeTIr4Owhb6Rao8qlQAeXkCwZ3l6vxhu9eomnR7VrU3Pozr.lo5k96txKJHBo8u0?startTime=1755620473000 Passcode: p%3Yrf0%
 
 ---
 5. **Beanie ODM** - [Branch: 05-fast-api-beanie-odm]
