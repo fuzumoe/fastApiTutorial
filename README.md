@@ -23,12 +23,16 @@ This repository contains a series of lessons demonstrating how to build robust A
    * **Vidoes**
     1. content: https://us06web.zoom.us/rec/share/fDSgKDLgNCvtwtw5WjWVehBl5WSGh4bgSP3OJGoLoFGS1-oj6IiybTracEFCa_Ge.b-CuA201-bYs6RmQ?startTime=1755101176000
        Passcode: HRM@r5tT
+
     2. content: https://us06web.zoom.us/rec/share/fDSgKDLgNCvtwtw5WjWVehBl5WSGh4bgSP3OJGoLoFGS1-oj6IiybTracEFCa_Ge.b-CuA201-bYs6RmQ?startTime=1755102003000
        Passcode: HRM@r5tT
+
     3. content: https://us06web.zoom.us/rec/share/fDSgKDLgNCvtwtw5WjWVehBl5WSGh4bgSP3OJGoLoFGS1-oj6IiybTracEFCa_Ge.b-CuA201-bYs6RmQ?startTime=1755102966000
        Passcode: HRM@r5tT
+
     4. content: https://us06web.zoom.us/rec/share/fDSgKDLgNCvtwtw5WjWVehBl5WSGh4bgSP3OJGoLoFGS1-oj6IiybTracEFCa_Ge.b-CuA201-bYs6RmQ?startTime=1755103973000
        Passcode: HRM@r5tT
+
 3. **REST Methods** - [Branch: 03-fast-api-rest-methods]
    * Implementing different HTTP methods (GET, POST, PUT, PATCH, DELETE)
    * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/03-fast-api-rest-methods/README.md)
@@ -36,19 +40,30 @@ This repository contains a series of lessons demonstrating how to build robust A
     1. content: https://us06web.zoom.us/rec/share/s4DT6LkcRo2RGQhS1cdA1_xhQNndIo8VLyzItlyQpMrnTMbnBYhoY-tYcXoV8qxL.InORGi30AYPQWd1C?startTime=1755188031000
       Passcode: nT@3j3%4
 
+
 ---
 4. **Pydantic Schemas** - [Branch: 04-fast-api-pydantic-schemas]
    * Data validation and serialization with Pydantic
    * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/04-fast-api-pydantic-schemas/README.md)
    * **Vidoes**
-   1. https://us06web.zoom.us/rec/share/yGFjMyzmLGxRECqvGaeTIr4Owhb6Rao8qlQAeXkCwZ3l6vxhu9eomnR7VrU3Pozr.lo5k96txKJHBo8u0?startTime=1755620473000 Passcode: p%3Yrf0%
+   1. https://us06web.zoom.us/rec/share/yGFjMyzmLGxRECqvGaeTIr4Owhb6Rao8qlQAeXkCwZ3l6vxhu9eomnR7VrU3Pozr.lo5k96txKJHBo8u0?startTime=1755620473000   Passcode: p%3Yrf0%
+
 
 ---
 5. **Beanie ODM** - [Branch: 05-fast-api-beanie-odm]
    * MongoDB integration with Beanie ODM
    * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/05-fast-api-beanie-odm/README.md)
 
---- * Vidoes [COMMING SOON]
+   * **Vidoes**
+   1. content: https://us06web.zoom.us/rec/share/3A1-6Zh8VSLgiVagROV3KAscc-zKenPrfe8iJrhVryA9kbc6whYqzQU7naRFXBPC.2HhP5hvaCQax3e6Q?startTime=1755707817000    Passcode: r^.f=v0m
+
+   2. content: https://us06web.zoom.us/rec/share/3A1-6Zh8VSLgiVagROV3KAscc-zKenPrfe8iJrhVryA9kbc6whYqzQU7naRFXBPC.2HhP5hvaCQax3e6Q?startTime=1755709542000  Passcode: r^.f=v0m
+
+   3. content: https://us06web.zoom.us/rec/share/3A1-6Zh8VSLgiVagROV3KAscc-zKenPrfe8iJrhVryA9kbc6whYqzQU7naRFXBPC.2HhP5hvaCQax3e6Q?startTime=1755710348000  Passcode: r^.f=v0m
+
+   4. content: https://us06web.zoom.us/rec/share/3A1-6Zh8VSLgiVagROV3KAscc-zKenPrfe8iJrhVryA9kbc6whYqzQU7naRFXBPC.2HhP5hvaCQax3e6Q?startTime=1755711272000  Passcode: r^.f=v0m
+
+---
 
 6. **Dependencies** - [Branch: 06-fast-api-dependencies]
    * Dependency injection and type annotations
