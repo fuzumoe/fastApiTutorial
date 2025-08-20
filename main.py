@@ -7,8 +7,8 @@ from typing import Any, cast
 
 import motor.motor_asyncio
 import uvicorn
-from beanie import Document, init_beanie
-from fastapi import FastAPI
+from beanie import Document, PydanticObjectId, init_beanie
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 from scalar_fastapi import get_scalar_api_reference
@@ -78,7 +78,7 @@ class Todo(Document):
         name = "todos"
 
 
-async def init(app: FastAPI) -> None:
+async def init_database(app: FastAPI) -> None:
     client: motor.motor_asyncio.AsyncIOMotorClient = (
         motor.motor_asyncio.AsyncIOMotorClient(MONGO_URI)
     )
@@ -93,7 +93,7 @@ async def remove_all_data() -> None:
     logger.info("All todos removed.")
 
 
-async def populate_data() -> None:
+async def seed_data() -> None:
     logger.info("No todos found, populating initial data...")
     initial_todos = []
     for todo_data in todos:
@@ -110,9 +110,9 @@ async def populate_data() -> None:
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     try:
         logger.info("Starting FastAPI application...")
-        await init(app)
+        await init_database(app)
         await remove_all_data()
-        await populate_data()
+        await seed_data()
         yield
         logger.info("Shutting down FastAPI application...")
         if hasattr(app.state, "mongo_client") and app.state.mongo_client is not None:
@@ -149,7 +149,7 @@ class TodoResponse(BaseModel):
     id: int
     task: str
     completed: bool
-    time: str
+    time: datetime
     priority: int
     rate: float
 
@@ -157,7 +157,7 @@ class TodoResponse(BaseModel):
 class TodoFilterRequest(BaseModel):
     task: str | None
     completed: bool | None
-    time: str | None
+    time: datetime | None
     rate: float | None
     priority: int | None
 
@@ -165,7 +165,7 @@ class TodoFilterRequest(BaseModel):
 class PatchTodoRequest(BaseModel):
     task: str | None
     completed: bool | None
-    time: str | None
+    time: datetime | None
     priority: int | None
     rate: float | None
 
@@ -173,9 +173,19 @@ class PatchTodoRequest(BaseModel):
 class UpdateTodoRequest(BaseModel):
     task: str
     completed: bool
-    time: str
+    time: datetime
     priority: int
     rate: float
+
+
+class UpdateTodoPaylaod(BaseModel):
+    filters: TodoFilterRequest
+    updates: UpdateTodoRequest
+
+
+class StatusResponse(BaseModel):
+    successs: bool
+    message: str | None = None
 
 
 @app.post("/todos")
@@ -265,43 +275,114 @@ async def get_todo(id: int) -> TodoResponse | None:
     return None
 
 
-@app.patch("/todos/{id}")
-async def update_todo(id: int, updates: PatchTodoRequest) -> TodoResponse | None:
-    logger.info(f"Partially updating todo with id {id}")
-    update_fields = updates.model_dump(exclude_unset=True)
+@app.patch("/todos/{todo_id}", response_model=TodoResponse)
+async def patch_todo(todo_id: str, update: UpdateTodoRequest) -> StatusResponse:
+    todo = await Todo.get(PydanticObjectId(todo_id))
+    if not todo:
+        raise HTTPException(status_code=404, detail="Todo not found")
 
-    all_todos = await Todo.find_all().to_list()
-    if 0 < id <= len(all_todos):
-        todo = all_todos[id - 1]
-        for field, value in update_fields.items():
-            setattr(todo, field, value)
-        await todo.save()
+    changes = {k: v for k, v in update.model_dump().items() if v is not None}
 
-        td = todo.model_dump()
-        td["id"] = id
-        result = TodoResponse(**td)
-        logger.info(f"Successfully updated todo with id {id}")
-        return result
+    for k, v in changes.items():
+        setattr(todo, k, v)
+    await todo.save()
 
-    logger.warning(f"Todo with id {id} not found for update")
-    return None
+    return StatusResponse(successs=True, message="Updated Successfull")
+
+
+@app.patch("/todos/{todo_id}")
+async def patch_todo_alt(todo_id: str, update: UpdateTodoRequest) -> StatusResponse:
+    changes = {k: v for k, v in update.model_dump().items() if v is not None}
+    if not changes:
+        raise HTTPException(status_code=400, detail="No changes provided")
+
+    res = await Todo.find({"_id": PydanticObjectId(todo_id)}).update({"$set": changes})
+    if res.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Todo not found")
+
+    return StatusResponse(successs=True, message="Updated Successfull")
+
+
+@app.put("/todos/{todo_id}")
+async def update_todo(todo_id: str, replacement: UpdateTodoRequest) -> StatusResponse:
+    """
+    Replace a todo completely using MongoDB's findOneAndUpdate operation.
+    This uses a single database operation for better efficiency.
+    """
+    logger.info(f"Replacing todo with id {todo_id}")
+
+    # Convert the update data
+    update_data = replacement.model_dump()
+
+    # Handle time conversion
+    if "time" in update_data and isinstance(update_data["time"], str):
+        update_data["time"] = datetime.fromisoformat(update_data["time"])
+
+    # Use findOneAndUpdate to update and return the document in a single operation
+    result = await Todo.find_one({"_id": PydanticObjectId(todo_id)}).update_one(
+        {"$set": update_data},
+        return_document=True,  # Return the updated document
+    )
+
+    # Check if document was found and updated
+    if not result:
+        raise HTTPException(status_code=404, detail="Todo not found")
+
+    return StatusResponse(successs=True, message="Updated Successfull")
+
+
+@app.put("/todos")
+async def update_many_todos(payload: UpdateTodoPaylaod) -> StatusResponse:
+    # Build filter
+    filter_dict: dict[str, Any] = payload.filters.model_dump()
+    update_dict: dict[str, Any] = payload.updates.model_dump()
+
+    if not filter_dict:
+        raise HTTPException(status_code=400, detail="No update fields provided")
+
+    logger.info(f"Bulk update: filters={filter_dict} set={filter_dict}")
+
+    # Single DB call: update many
+    result = await Todo.find(filter_dict).update({"$set": update_dict})
+
+    if result:
+        return StatusResponse(successs=True, message="Updated Successfull")
+
+    return StatusResponse(successs=False, message="Updated Failed")
 
 
 @app.put("/todos/{id}")
 async def replace_todo_completely(
     id: int, todo_data: UpdateTodoRequest
 ) -> TodoResponse | None:
+    """
+    Replace a todo completely using Beanie's update operation.
+    This is more efficient than setting attributes one by one.
+    """
     logger.info(f"Completely replacing todo with id {id}")
 
     all_todos = await Todo.find_all().to_list()
     if 0 < id <= len(all_todos):
         todo = all_todos[id - 1]
-        for field, value in todo_data.model_dump().items():
-            setattr(todo, field, value)
-        await todo.save()
 
+        # Convert time string to datetime for MongoDB
+        todo_dict = todo_data.model_dump()
+        if "time" in todo_dict and isinstance(todo_dict["time"], str):
+            todo_dict["time"] = datetime.fromisoformat(todo_dict["time"])
+
+        # Use Beanie's update method
+        await todo.update({"$set": todo_dict})
+
+        # Refresh the todo object after update
+        await todo.refresh()
+
+        # Prepare response
         rd = todo.model_dump()
         rd["id"] = id
+        # Convert datetime back to string for the response
+        if isinstance(rd["time"], datetime):
+            rd["time"] = rd["time"].isoformat()
+
         result = TodoResponse(**rd)
         logger.info(f"Successfully replaced todo with id {id}")
         return result
