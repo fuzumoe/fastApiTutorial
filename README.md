@@ -68,7 +68,13 @@ This repository contains a series of lessons demonstrating how to build robust A
 6. **Dependencies** - [Branch: 06-fast-api-dependencies]
    * Dependency injection and type annotations
    * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/06-fast-api-dependencies/README.md)
-   * Vidoes [COMMING SOON]
+
+   * **Vidoes**
+      1. content: https://us06web.zoom.us/rec/share/35uHIHFKdzg4puJUcKNSDZZ7STK40o8uWOmY9IGJSRECdbAhaRYwlchUxl3D176y._ajnIflLTq2g8q-G?startTime=1755793968000
+      Passcode: 8x1v7+&N
+
+      2. content:https://us06web.zoom.us/rec/share/35uHIHFKdzg4puJUcKNSDZZ7STK40o8uWOmY9IGJSRECdbAhaRYwlchUxl3D176y._ajnIflLTq2g8q-G?startTime=1755794714000
+      Passcode: 8x1v7+&N
 ---
 7. **App Scaffolding** - [Branch: 07-app-scaffolding]
    * Structuring a larger FastAPI application
