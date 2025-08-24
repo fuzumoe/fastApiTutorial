@@ -1,0 +1,3 @@
+timestamp,level,logger,message
+2025-08-24 12:25:09,351,WARNING,csv_example,This is a CSV log example
+2025-08-24 12:25:09,351,INFO,csv_example,Another CSV log entry for data analysis
