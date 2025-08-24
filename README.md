@@ -1,263 +1,390 @@
-# 📝 Python Logging: Beginner’s Guide
+# 🐍 Pydantic Settings — From Zero to Ultimate
 
-Logging is a way for your program to **report what it’s doing**.
-Instead of just using `print()`, logging is **more powerful** because:
-- You can control **how much detail** to show (levels).
-- You can save logs to a **file** instead of the screen.
-- You can **format** logs to include things like time, file, or line number.
-- You can direct logs to different **destinations** (console, file, external system).
+This is a complete lesson on **Pydantic Settings** (v2 with `pydantic-settings`), going step by step from minimal usage to advanced patterns with `model_config` and `PYTHONPATH` handling.
 
 ---
-| Level      | Numeric Value | When to Use It                                                  |
-| ---------- | ------------- | --------------------------------------------------------------- |
-| `DEBUG`    | 10            | Very detailed info, useful only for developers while debugging. |
-| `INFO`     | 20            | Normal events that confirm the program is working.              |
-| `WARNING`  | 30            | Something unexpected happened, but the program still runs fine. |
-| `ERROR`    | 40            | A problem that prevented part of the program from working.      |
-| `CRITICAL` | 50            | A very serious problem, the program may crash.                  |
 
+## 📦 Installation
 
-## 1. The Simplest Logger
-```python
-import logging
-import logging
-
-logging.basicConfig(level=logging.WARNING)
-
-logging.debug("Debug message")   # NOT shown
-logging.info("Info message")     # NOT shown
-logging.warning("Warning message")  # ✅ shown
-logging.error("Error message")     # ✅ shown
-logging.critical("Critical message") # ✅ shown
-```
-👉 Output (example):
-```
-DEBUG:root:This is a DEBUG message
-INFO:root:This is an INFO message
-WARNING:root:This is a WARNING message
-ERROR:root:This is an ERROR message
-CRITICAL:root:This is a CRITICAL message
+```bash
+pip install "pydantic>=2.0" "pydantic-settings>=2.0" python-dotenv
 ```
 
 ---
 
-## 2. Logging Levels
-Levels decide how **important** a log message is:
+## 🔹 0. Why Pydantic Settings?
 
-- `DEBUG` → Detailed info (good for developers).
-- `INFO` → General program events (normal operation).
-- `WARNING` → Something unexpected, but program continues.
-- `ERROR` → A serious issue, program may not continue.
-- `CRITICAL` → Very serious error, program is in trouble.
-
-By default, only `WARNING` and above are shown unless you set `level` in `basicConfig`.
+- Manage app config with **environment variables** and `.env` files.
+- Instead of `os.getenv("VAR")` scattered everywhere:
+  - ✅ Type validation
+  - ✅ Defaults
+  - ✅ Env override order
+  - ✅ Nested structures
+  - ✅ Secrets support
 
 ---
 
-## 3. Formatting Logs
-You can **control the look** of log messages.
+## 🔹 1. Minimal Example
 
 ```python
-import logging
+from pydantic_settings import BaseSettings
 
-logging.basicConfig(
-    level=logging.DEBUG,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+class Settings(BaseSettings):
+    app_name: str = "My App"
+    debug: bool = False
+    port: int = 8000
+
+settings = Settings()
+print(settings.app_name)  # "My App"
+```
+
+---
+
+## 🔹 2. Environment Variable Override
+
+```bash
+export APP_NAME="ProdApp"
+export DEBUG=true
+export PORT=9000
+```
+
+```python
+settings = Settings()
+print(settings.app_name)  # "ProdApp"
+```
+
+---
+
+## 🔹 3. Using `.env` Files
+
+`.env` file:
+
+```
+APP_NAME=EnvApp
+DEBUG=true
+PORT=7000
+```
+
+```python
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+class Settings(BaseSettings):
+    app_name: str
+    debug: bool
+    port: int
+
+    model_config = SettingsConfigDict(env_file=".env")
+```
+
+---
+
+## 🔹 4. Deep Dive: `model_config`
+
+The **central control panel** for how settings are loaded.
+
+```python
+from pathlib import Path
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+ENV_FILE = Path(__file__).parent / ".env"
+
+class Settings(BaseSettings):
+    app_name: str = "MyApp"
+    debug: bool = False
+    port: int = 8000
+
+    model_config = SettingsConfigDict(
+        env_file=str(ENV_FILE),        # .env file
+        env_file_encoding="utf-8",     # encoding
+        case_sensitive=False,          # insensitive env var names
+        env_prefix="APP_",             # all env vars prefixed
+        env_nested_delimiter="__",     # nested model support
+        extra="ignore",                # ignore unknown env vars
+    )
+```
+
+### `model_config` Options
+- **`env_file`**: one or more `.env` files (tuple allowed, ordered priority).
+- **`env_file_encoding`**: default `"utf-8"`.
+- **`case_sensitive`**: toggle strict casing.
+- **`env_prefix`**: prepend to all vars (`APP_...`).
+- **`env_nested_delimiter`**: flatten nested models (`DB__URL → db.url`).
+- **`extra`**: `"ignore"` / `"forbid"` / `"allow"`.
+
+👉 You can **override at runtime**:
+
+```python
+settings = Settings(
+    _env_file=".env.dev",
+    _case_sensitive=True
 )
-
-logging.info("App started")
-logging.error("Something went wrong")
-```
-
-👉 Example output:
-```
-2025-08-24 10:20:15,345 - root - INFO - App started
-2025-08-24 10:20:15,346 - root - ERROR - Something went wrong
-```
-
-**Common format fields:**
-- `%(asctime)s` → Time
-- `%(name)s` → Logger name
-- `%(levelname)s` → Level
-- `%(message)s` → The log text
-
----
-
-## 4. Loggers, Handlers, and Formatters (The Trio)
-Think of logging as a pipeline:
-- **Logger** → the entry point (`logging.getLogger()`)
-- **Handler** → decides *where* logs go (console, file, etc.)
-- **Formatter** → decides *how* logs look
-
-Example:
-```python
-import logging
-
-# Create a logger
-logger = logging.getLogger("my_app")
-logger.setLevel(logging.DEBUG)
-
-# Create handler (send logs to file)
-file_handler = logging.FileHandler("app.log")
-file_handler.setLevel(logging.ERROR)
-
-# Create formatter
-formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-file_handler.setFormatter(formatter)
-
-# Add handler to logger
-logger.addHandler(file_handler)
-
-# Logs
-logger.debug("Debug message (won’t go to file)")
-logger.error("Error message (will go to file)")
-```
-👉 This will save only **ERROR and above** messages into `app.log`.
-
----
-
-## 5. Multiple Handlers
-You can send logs to **console AND file** at the same time with different levels.
-
-```python
-import logging
-
-logger = logging.getLogger("multi")
-logger.setLevel(logging.DEBUG)
-
-# Console handler
-console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.INFO)
-
-# File handler
-file_handler = logging.FileHandler("errors.log")
-file_handler.setLevel(logging.ERROR)
-
-# Formatter
-formatter = logging.Formatter("%(levelname)s - %(message)s")
-console_handler.setFormatter(formatter)
-file_handler.setFormatter(formatter)
-
-# Add handlers
-logger.addHandler(console_handler)
-logger.addHandler(file_handler)
-
-logger.info("This goes to console only")
-logger.error("This goes to console AND file")
 ```
 
 ---
 
-## 6. Best Practices
-✅ Always use `logging` instead of `print()` for real apps.
-✅ Use **different levels** for different situations.
-✅ Send logs to **files** for later debugging.
-✅ Use **formatters** to add timestamps.
-✅ Use **different loggers** for different parts of your app (e.g., `logger = logging.getLogger("database")`).
+## 🔹 5. Nested Settings
+
+```python
+from pydantic import BaseModel
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+class DatabaseSettings(BaseModel):
+    url: str = "sqlite:///./test.db"
+    pool_size: int = 10
+
+class Settings(BaseSettings):
+    database: DatabaseSettings = DatabaseSettings()
+
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_nested_delimiter="__"
+    )
+```
+
+`.env` file:
+
+```
+DATABASE__URL=postgresql://user:pass@db/dbname
+DATABASE__POOL_SIZE=20
+```
 
 ---
 
-⚡ **Next Steps:**
-Practice by creating your own small script that:
-1. Logs `INFO` messages to the console.
-2. Logs `ERROR` messages to a file.
-3. Uses a formatter that includes time and level.
-
-## 🔹 Logging Formatters
-
-### What are Formatters?
-- A **formatter** controls the **structure and style** of log messages.
-- It defines what details appear (time, level, message, file, etc.) and how they’re arranged.
-- Formatters are attached to **handlers**, so each handler can format logs differently.
-
-### 1. **Text Formatter (default style)**
-The most common way: plain text with timestamp, logger name, level, and message.
+## 🔹 6. Profiles (dev/staging/prod)
 
 ```python
-import logging
+import os
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
-logger = logging.getLogger("text_example")
-logger.setLevel(logging.DEBUG)
+class Settings(BaseSettings):
+    app_name: str = "ProfiledApp"
+    debug: bool = False
 
-# Console handler
-console_handler = logging.StreamHandler()
-
-# Text formatter
-text_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-console_handler.setFormatter(text_formatter)
-
-logger.addHandler(console_handler)
-
-logger.info("This is a text log example")
+    model_config = SettingsConfigDict(
+        env_file=(
+            ".env",
+            f".env.{os.getenv('ENV', 'dev')}"
+        )
+    )
 ```
 
-**Output:**
-```
-2025-08-24 12:34:56,789 - text_example - INFO - This is a text log example
-```
+👉 `ENV=prod` → loads `.env.prod`.
 
-### 2. **JSON Formatter**
-Useful when logs need to be structured for systems like **Elasticsearch, Kibana, or Logstash**.
+---
+
+## 🔹 7. Secrets Support
 
 ```python
-import logging, json
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
-class JsonFormatter(logging.Formatter):
-    def format(self, record):
-        log_record = {
-            "time": self.formatTime(record, self.datefmt),
-            "level": record.levelname,
-            "logger": record.name,
-            "message": record.getMessage(),
-        }
-        return json.dumps(log_record)
+class Settings(BaseSettings):
+    api_key: str
 
-logger = logging.getLogger("json_example")
-logger.setLevel(logging.DEBUG)
-
-console_handler = logging.StreamHandler()
-json_formatter = JsonFormatter()
-console_handler.setFormatter(json_formatter)
-
-logger.addHandler(console_handler)
-
-logger.info("This is a JSON log example")
+    model_config = SettingsConfigDict(secrets_dir="/var/run/secrets")
 ```
 
-**Output:**
-```json
-{"time": "2025-08-24 12:34:56", "level": "INFO", "logger": "json_example", "message": "This is a JSON log example"}
-```
+File `/var/run/secrets/api_key` → `settings.api_key == "supersecret"`
 
-### 3. **CSV Formatter**
-Sometimes logs are exported into spreadsheets or analysis tools.
-We can create a **CSV-like formatter**.
+---
+
+## 🔹 8. Ultimate Example
 
 ```python
-import logging
+from pydantic import BaseModel, Field, HttpUrl
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
-class CsvFormatter(logging.Formatter):
-    def format(self, record):
-        return f"{self.formatTime(record, self.datefmt)},{record.levelname},{record.name},{record.getMessage()}"
+class DatabaseSettings(BaseModel):
+    url: str = "sqlite:///./app.db"
+    pool_size: int = Field(10, ge=1, le=100)
 
-logger = logging.getLogger("csv_example")
-logger.setLevel(logging.DEBUG)
+class LoggingSettings(BaseModel):
+    level: str = "INFO"
+    json: bool = False
 
-console_handler = logging.StreamHandler()
-csv_formatter = CsvFormatter()
-console_handler.setFormatter(csv_formatter)
+class HTTPSettings(BaseModel):
+    host: str = "0.0.0.0"
+    port: int = 8000
 
-logger.addHandler(console_handler)
+class SecuritySettings(BaseModel):
+    cors_origins: list[HttpUrl] = []
 
-logger.warning("This is a CSV log example")
+class Settings(BaseSettings):
+    app_name: str = "AvatarApp"
+    debug: bool = False
+    version: str = "1.0.0"
+
+    http: HTTPSettings = HTTPSettings()
+    log: LoggingSettings = LoggingSettings()
+    db: DatabaseSettings = DatabaseSettings()
+    security: SecuritySettings = SecuritySettings()
+
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=False,
+        env_prefix="APP_",
+        env_nested_delimiter="__",
+        extra="ignore"
+    )
 ```
 
-**Output:**
-```
-2025-08-24 12:34:56,789,WARNING,csv_example,This is a CSV log example
+---
+
+## 🔹 9. Integration with FastAPI
+
+```python
+from fastapi import FastAPI
+
+settings = Settings()
+app = FastAPI(title=settings.app_name)
+
+@app.get("/info")
+def info():
+    return settings.model_dump()
 ```
 
-👉 Summary:
-- **Text** = human-friendly, console/debugging.
-- **JSON** = machine-readable, structured logs for log aggregators.
-- **CSV** = easy export for analysis in Excel or Pandas.
+---
+
+## 🔹 10. PYTHONPATH and Settings
+
+When working on structured projects:
+
+```
+project/
+├── app/
+│   ├── core/
+│   │   └── config.py   # settings here
+│   ├── main.py
+├── .env
+```
+
+`config.py`:
+
+```python
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+class Settings(BaseSettings):
+    app_name: str = "AvatarApp"
+
+    model_config = SettingsConfigDict(env_file=".env")
+
+settings = Settings()
+```
+
+In `main.py`:
+
+```python
+from app.core.config import settings
+print(settings.app_name)
+```
+
+### Problem: `ModuleNotFoundError: No module named 'app'`
+
+👉 Solutions:
+1. Run with module mode:
+   ```bash
+   python -m app.main
+   ```
+2. Add `PYTHONPATH`:
+   ```bash
+   export PYTHONPATH=$(pwd)
+   python app/main.py
+   ```
+3. Use `.env` file:
+   ```
+   PYTHONPATH=.
+   ```
+   And load with `dotenv`.
+
+This ensures **imports work consistently** across dev, test, and prod.
+
+---
+
+## 🔹 11. Testing Settings
+
+```python
+def configure_for_tests(env: dict) -> Settings:
+    old_env = dict(os.environ)
+    try:
+        os.environ.update(env)
+        return Settings(_env_file=None)  # ignore .env
+    finally:
+        os.environ.clear()
+        os.environ.update(old_env)
+```
+
+---
+
+## 🔹 12. Migration Notes (v1 → v2)
+
+- **v1**:
+  ```python
+  class Config:
+      env_file = ".env"
+      env_prefix = "APP_"
+  ```
+- **v2**:
+  ```python
+  model_config = SettingsConfigDict(env_file=".env", env_prefix="APP_")
+  ```
+
+---
+
+# ✅ Summary
+
+- **`model_config`** = core for customizing env parsing.
+- **`.env` files + env vars** integrated seamlessly.
+- **Nested models** with `__`.
+- **Profiles & secrets** supported.
+- **PYTHONPATH** handling is crucial for imports in structured projects.
+
+---
+
+⚡ With this, you can handle **local dev, testing, production, and containerized deployments** — all with one unified config system.
+
+
+---
+
+# 📚 References for Pydantic Settings
+
+## 🔹 Official Documentation
+1. **Pydantic Settings (v2) Docs**
+   👉 [https://docs.pydantic.dev/latest/concepts/pydantic_settings/](https://docs.pydantic.dev/latest/concepts/pydantic_settings/)
+   - Official explanation of `BaseSettings`, `SettingsConfigDict`, env precedence, `.env` integration, and secrets.
+
+2. **Pydantic v2 Main Docs**
+   👉 [https://docs.pydantic.dev/latest/](https://docs.pydantic.dev/latest/)
+   - Full reference for `BaseModel`, `model_config`, and validation.
+
+3. **GitHub Repository**
+   👉 [https://github.com/pydantic/pydantic-settings](https://github.com/pydantic/pydantic-settings)
+   - Source code and issues (helpful to understand real-world usage, bug reports, and workarounds).
+
+---
+
+## 🔹 Articles & Tutorials
+4. **RealPython – Settings with Pydantic** (v1 focus but concepts still valid for v2)
+   👉 [https://realpython.com/python-pydantic/](https://realpython.com/python-pydantic/)
+
+5. **FastAPI Advanced Config with Pydantic**
+   👉 [https://fastapi.tiangolo.com/advanced/settings/](https://fastapi.tiangolo.com/advanced/settings/)
+   - Shows how to integrate Pydantic Settings into FastAPI (uses v1 syntax, but easily translatable to v2).
+
+6. **TestDriven.io – Environment Variables with Pydantic**
+   👉 [https://testdriven.io/blog/fastapi-env-vars/](https://testdriven.io/blog/fastapi-env-vars/)
+
+---
+
+## 🔹 Migration & Version Notes
+7. **Pydantic v1 → v2 Migration Guide**
+   👉 [https://docs.pydantic.dev/latest/migration/](https://docs.pydantic.dev/latest/migration/)
+   - Explains differences (e.g., `Config` → `model_config`, `.dict()` → `.model_dump()`).
+
+---
+
+## 🔹 Community & Discussions
+8. **Stack Overflow – Pydantic Settings Questions**
+   👉 [https://stackoverflow.com/questions/tagged/pydantic](https://stackoverflow.com/questions/tagged/pydantic)
+
+9. **Discussions on GitHub**
+   👉 [https://github.com/pydantic/pydantic/discussions](https://github.com/pydantic/pydantic/discussions)
