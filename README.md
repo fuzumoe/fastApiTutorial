@@ -86,49 +86,57 @@ This repository contains a series of lessons demonstrating how to build robust A
 
 ---
 
-8. **Pydantic Settings** - [Branch: 07-pydantic-settings]
+8. **Pydantic Settings** - [Branch: 08-pydantic-settings]
     * Managing application configuration with Pydantic
     * Environment-specific settings
     * Validation and type safety for configuration
-    * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/07-pydantic-settings/README.md)
+    * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/08-pydantic-settings/README.md)
     * **Videos** [COMING SOON]
+---
+
+9. **FastApi Events** - [Branch: 09-fastapi-events]
+   * Understanding FastAPI's event system
+   * Implementing startup and shutdown event handlers
+   * Managing application lifecycle events
+   * Background tasks and long-running processes
+   * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/09-fastapi-events/README.md)
+   * **Videos** [COMING SOON]
 
 ---
-9. **App Scaffolding** - [Branch: 07-app-scaffolding]
-   * Structuring a larger FastAPI application
-   * Best practices for project organization
-   * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/07-app-scaffolding/README.md)
-   * Vidoes [COMMING SOON]
-
----
-10. **App Configuring** - [Branch: 08-app-configuring]
-   * Environment-based configuration management
-   * Settings management with Pydantic
-   * Secrets handling and environment variables
-   * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/08-app-configuring/README.md)
-   * Vidoes [COMMING SOON]
----
-11. **Model View Controller (MVC)** - [Branch: 09-mvc]
-   * Implementing MVC pattern in FastAPI
-   * Separating business logic, data models, and presentation
-   * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/09-mvc/README.md)
-   * Vidoes [COMMING SOON]
-
----
-12. **Authentication** - [Branch: 10-authentication]
-   * Implementing JWT-based authentication
-   * User registration and login flows
-   * Securing routes with dependencies
-   * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/10-authentication/README.md)
-   * Vidoes [COMMING SOON]
-
----
-13. **Middlewares** - [Branch: 11-middlewares]
+10. **Middlewares** - [Branch: 10-middlewares]
    * Creating custom middlewares
    * Request/response modification
    * Cross-cutting concerns (logging, CORS, rate limiting)
    * Middleware execution order
-   * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/11-middlewares/README.md)
+   * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/101-middlewares/README.md)
+   * Vidoes [COMMING SOON]
+---
+11. **Authentication** - [Branch: 11-authentication]
+   * Implementing JWT-based authentication
+   * User registration and login flows
+   * Securing routes with dependencies
+   * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/11-authentication/README.md)
+   * Vidoes [COMMING SOON]
+
+---
+12. **App Scaffolding** - [Branch: 12-app-scaffolding]
+   * Structuring a larger FastAPI application
+   * Best practices for project organization
+   * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/12-app-scaffolding/README.md)
+   * Vidoes [COMMING SOON]
+
+---
+13. **App Configuring** - [Branch: 13-app-configuring]
+   * Environment-based configuration management
+   * Settings management with Pydantic
+   * Secrets handling and environment variables
+   * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/13-app-configuring/README.md)
+   * Vidoes [COMMING SOON]
+---
+14. **Model View Controller (MVC)** - [Branch: 09-mvc]
+   * Implementing MVC pattern in FastAPI
+   * Separating business logic, data models, and presentation
+   * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/14-mvc/README.md)
    * Vidoes [COMMING SOON]
 
 ---
