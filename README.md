@@ -94,12 +94,13 @@ This repository contains a series of lessons demonstrating how to build robust A
     * **Videos** [COMING SOON]
 ---
 
-9. **FastApi Events** - [Branch: 09-fastapi-events]
-   * Understanding FastAPI's event system
-   * Implementing startup and shutdown event handlers
-   * Managing application lifecycle events
-   * Background tasks and long-running processes
-   * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/09-fastapi-events/README.md)
+9. **FastApi Background Tasks** - [Branch: 09-fastapi-background-tasks]
+    * Understanding FastAPI's background task functionality
+    * Handling long-running operations without blocking responses
+    * Implementing post-request processing tasks
+    * Managing task dependencies and error handling
+    * Performance considerations for background operations
+   * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/09-fastapi-background-tasks/README.md)
    * **Videos** [COMING SOON]
 
 ---
