@@ -83,7 +83,8 @@ This repository contains a series of lessons demonstrating how to build robust A
     * Best practices for application logging
     * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/07-python-logging/README.md)
     * **Videos** [COMING SOON]
-
+    1. content: https://us06web.zoom.us/rec/share/DVDby8IDjp9OaYOPm23pOUui6uq5uBxmsOmlcO4nRVNI89xvFT_5I_Pow2Tfw4QU.X_2AnzX7DgWiSDm6?startTime=1756225251000
+        Passcode: !74N9wAr
 ---
 
 8. **Pydantic Settings** - [Branch: 08-pydantic-settings]
@@ -141,3 +142,15 @@ This repository contains a series of lessons demonstrating how to build robust A
    * Vidoes [COMMING SOON]
 
 ---
+
+
+### Exercises
+1. **Exercises 1** - [Branch: exercise-1]
+
+content: https://us06web.zoom.us/rec/share/syZXCsZAHRrC10c3a8aOE-FsXf0Mlb10sGJbI5EOrlJ89v977YTMke6tgB8JIckw.1BO_9QMPVRxwzZJP?startTime=1756142147000
+Passcode: BPr%i3Vf
+
+2. **Exercises 2** - [Branch: exercise-2]
+
+content: https://us06web.zoom.us/rec/share/syZXCsZAHRrC10c3a8aOE-FsXf0Mlb10sGJbI5EOrlJ89v977YTMke6tgB8JIckw.1BO_9QMPVRxwzZJP?startTime=1756140449000
+Passcode: BPr%i3Vf
