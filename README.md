@@ -82,8 +82,12 @@ This repository contains a series of lessons demonstrating how to build robust A
     * Configuring logging levels and handlers
     * Best practices for application logging
     * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/07-python-logging/README.md)
-    * **Videos** [COMING SOON]
-   
+    * **Videos**
+      1. https://us06web.zoom.us/rec/share/c0WvPnkdGFyspc67CPclsr7RLWk0F5aQQP7Mvai1JbdvM6wvXkNcGed0CO7EyA8T.-qYP0Rc0mNK1oT_s?startTime=1756396887000
+         Passcode: T9tD&A56
+         
+      3. https://us06web.zoom.us/rec/share/c0WvPnkdGFyspc67CPclsr7RLWk0F5aQQP7Mvai1JbdvM6wvXkNcGed0CO7EyA8T.-qYP0Rc0mNK1oT_s?startTime=1756397797000
+         Passcode: T9tD&A56
 ---
 
 8. **Pydantic Settings** - [Branch: 08-pydantic-settings]
