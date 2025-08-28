@@ -83,8 +83,7 @@ This repository contains a series of lessons demonstrating how to build robust A
     * Best practices for application logging
     * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/07-python-logging/README.md)
     * **Videos** [COMING SOON]
-    1. content: https://us06web.zoom.us/rec/share/DVDby8IDjp9OaYOPm23pOUui6uq5uBxmsOmlcO4nRVNI89xvFT_5I_Pow2Tfw4QU.X_2AnzX7DgWiSDm6?startTime=1756225251000
-        Passcode: !74N9wAr
+   
 ---
 
 8. **Pydantic Settings** - [Branch: 08-pydantic-settings]
@@ -102,7 +101,9 @@ This repository contains a series of lessons demonstrating how to build robust A
     * Managing task dependencies and error handling
     * Performance considerations for background operations
    * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/09-fastapi-background-tasks/README.md)
-   * **Videos** [COMING SOON]
+   * **Videos** 
+   1. content: https://us06web.zoom.us/rec/share/DVDby8IDjp9OaYOPm23pOUui6uq5uBxmsOmlcO4nRVNI89xvFT_5I_Pow2Tfw4QU.X_2AnzX7DgWiSDm6?startTime=1756225251000
+        Passcode: !74N9wAr
 
 ---
 10. **Middlewares** - [Branch: 10-middlewares]
