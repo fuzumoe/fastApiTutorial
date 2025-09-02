@@ -95,7 +95,13 @@ This repository contains a series of lessons demonstrating how to build robust A
     * Environment-specific settings
     * Validation and type safety for configuration
     * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/08-pydantic-settings/README.md)
-    * **Videos** [COMING SOON]
+    * **Videos**
+      1. https://us06web.zoom.us/rec/share/Upe__TohAYAjG3Q7MtB1oDAuk6VLRTocU0wy_OCaEP3F8Q1YGuvmWm-rZkTKrFmq.fD8-MlQyka-JAYl0?startTime=1756829215000
+        Passcode: 96zBm%h5
+      2. https://us06web.zoom.us/rec/share/Upe__TohAYAjG3Q7MtB1oDAuk6VLRTocU0wy_OCaEP3F8Q1YGuvmWm-rZkTKrFmq.fD8-MlQyka-JAYl0?startTime=1756830690000
+        Passcode: 96zBm%h5
+      3. https://us06web.zoom.us/rec/share/Upe__TohAYAjG3Q7MtB1oDAuk6VLRTocU0wy_OCaEP3F8Q1YGuvmWm-rZkTKrFmq.fD8-MlQyka-JAYl0?startTime=1756831597000
+          Passcode: 96zBm%h5
 ---
 
 9. **FastApi Background Tasks** - [Branch: 09-fastapi-background-tasks]
