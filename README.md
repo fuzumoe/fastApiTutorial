@@ -1,4 +1,4 @@
-# 🐍 Pydantic Settings — From Zero to Ultimate
+# 🐍 Pydantic Settings
 
 This is a complete lesson on **Pydantic Settings** (v2 with `pydantic-settings`), going step by step from minimal usage to advanced patterns with `model_config` and `PYTHONPATH` handling.
 
