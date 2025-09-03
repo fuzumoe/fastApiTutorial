@@ -85,7 +85,7 @@ This repository contains a series of lessons demonstrating how to build robust A
     * **Videos**
       1. https://us06web.zoom.us/rec/share/c0WvPnkdGFyspc67CPclsr7RLWk0F5aQQP7Mvai1JbdvM6wvXkNcGed0CO7EyA8T.-qYP0Rc0mNK1oT_s?startTime=1756396887000
          Passcode: T9tD&A56
-         
+
       3. https://us06web.zoom.us/rec/share/c0WvPnkdGFyspc67CPclsr7RLWk0F5aQQP7Mvai1JbdvM6wvXkNcGed0CO7EyA8T.-qYP0Rc0mNK1oT_s?startTime=1756397797000
          Passcode: T9tD&A56
 ---
@@ -111,7 +111,7 @@ This repository contains a series of lessons demonstrating how to build robust A
     * Managing task dependencies and error handling
     * Performance considerations for background operations
    * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/09-fastapi-background-tasks/README.md)
-   * **Videos** 
+   * **Videos**
    1. content: https://us06web.zoom.us/rec/share/DVDby8IDjp9OaYOPm23pOUui6uq5uBxmsOmlcO4nRVNI89xvFT_5I_Pow2Tfw4QU.X_2AnzX7DgWiSDm6?startTime=1756225251000
         Passcode: !74N9wAr
 
@@ -121,7 +121,7 @@ This repository contains a series of lessons demonstrating how to build robust A
    * Request/response modification
    * Cross-cutting concerns (logging, CORS, rate limiting)
    * Middleware execution order
-   * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/101-middlewares/README.md)
+   * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/10-middlewares/README.md)
    * Vidoes [COMMING SOON]
 ---
 11. **Authentication** - [Branch: 11-authentication]
