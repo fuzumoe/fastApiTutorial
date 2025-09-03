@@ -1,4 +1,4 @@
-# 🚀 FastAPI Middleware — Beginner’s Guide
+# 🚀 FastAPI Middleware
 
 Middleware is like a **filter** that every request and response passes through.
 It sits **between the client** and your **API endpoints**.
