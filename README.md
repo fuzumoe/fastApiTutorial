@@ -122,7 +122,11 @@ This repository contains a series of lessons demonstrating how to build robust A
    * Cross-cutting concerns (logging, CORS, rate limiting)
    * Middleware execution order
    * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/10-middlewares/README.md)
-   * Vidoes [COMMING SOON]
+   1. content: https://us06web.zoom.us/rec/share/iqwbvPqG5kvxO9QeXqdoI4XYZeCsj4RjvT69Hkw9a214-X0b8vU2MURVm203yPhd.Xbx9QAvbHjBznEH5?startTime=1757347534000
+      Passcode: +CJD2c$d
+
+   1. content: https://us06web.zoom.us/rec/share/iqwbvPqG5kvxO9QeXqdoI4XYZeCsj4RjvT69Hkw9a214-X0b8vU2MURVm203yPhd.Xbx9QAvbHjBznEH5?startTime=1757349122000
+      Passcode: +CJD2c$d
 ---
 11. **Authentication** - [Branch: 11-authentication]
    * Implementing JWT-based authentication
