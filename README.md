@@ -125,8 +125,11 @@ This repository contains a series of lessons demonstrating how to build robust A
    1. content: https://us06web.zoom.us/rec/share/iqwbvPqG5kvxO9QeXqdoI4XYZeCsj4RjvT69Hkw9a214-X0b8vU2MURVm203yPhd.Xbx9QAvbHjBznEH5?startTime=1757347534000
       Passcode: +CJD2c$d
 
-   1. content: https://us06web.zoom.us/rec/share/iqwbvPqG5kvxO9QeXqdoI4XYZeCsj4RjvT69Hkw9a214-X0b8vU2MURVm203yPhd.Xbx9QAvbHjBznEH5?startTime=1757349122000
+   2. content: https://us06web.zoom.us/rec/share/iqwbvPqG5kvxO9QeXqdoI4XYZeCsj4RjvT69Hkw9a214-X0b8vU2MURVm203yPhd.Xbx9QAvbHjBznEH5?startTime=1757349122000
       Passcode: +CJD2c$d
+
+   3. https://us06web.zoom.us/rec/share/zQwGDEtWZbsna_OIw-2iWENSAlvqUuRKhZk6083cBrBjLZq4qVgi_aNsoR6MDJSv.8GwA1jp753gw_Nz6?startTime=1757521417000
+   Passcode: TD?^9B2Y
 ---
 11. **Authentication** - [Branch: 11-authentication]
    * Implementing JWT-based authentication
