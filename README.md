@@ -130,13 +130,46 @@ This repository contains a series of lessons demonstrating how to build robust A
 
    3. https://us06web.zoom.us/rec/share/zQwGDEtWZbsna_OIw-2iWENSAlvqUuRKhZk6083cBrBjLZq4qVgi_aNsoR6MDJSv.8GwA1jp753gw_Nz6?startTime=1757521417000
    Passcode: TD?^9B2Y
+
+   4. https://us06web.zoom.us/rec/share/331v6kG4jzAooxcVADIjWeC6kr66ILb_nUhYdC16-zBg6xtohQju0i0wzPiPHvw.K0DxC4-X6wPEgMAx?startTime=1758557469000
+    Passcode: sn$sYe*5
+
+    5. https://us06web.zoom.us/rec/share/331v6kG4jzAooxcVADIjWeC6kr66ILb_nUhYdC16-zBg6xtohQju0i0wzPiPHvw.K0DxC4-X6wPEgMAx?startTime=1758559637000
+    Passcode: sn$sYe*5
+
+
+
 ---
 11. **Authentication** - [Branch: 11-authentication]
    * Implementing JWT-based authentication
    * User registration and login flows
    * Securing routes with dependencies
    * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/11-authentication/README.md)
-   * Vidoes [COMMING SOON]
+   * Vidoes
+
+    1. https://us06web.zoom.us/rec/share/yfxEwEg3M4n3zXeYtCzMlUe_VLjzrhfEDT8FMOPsj3wvOdK-VC-I8mEo3MNyQDsQ.7IgljIcN8SjIF1Ya?startTime=1757347534000
+    Passcode: +CJD2c$d
+
+    2. https://us06web.zoom.us/rec/share/yfxEwEg3M4n3zXeYtCzMlUe_VLjzrhfEDT8FMOPsj3wvOdK-VC-I8mEo3MNyQDsQ.7IgljIcN8SjIF1Ya?startTime=1757349122000
+    Passcode: +CJD2c$d
+
+
+    3. https://us06web.zoom.us/rec/share/EWherm-X15PUKdNQ3XLdwxIG9XyV1CeRX5dsy-byKa-zOXUqIBcnrnfo2q5pcBJh.zncWzZqo_oUau5u7?startTime=1759249487000
+    Passcode: ea=GE5Xx
+
+    4. https://us06web.zoom.us/rec/share/UOtTo8ltzb9BAR-g9aUxPTQYBGEFvAYZXge4hjUv6OMIH4_2NWgpgz6jO0eSG9--.iY1mZDtgQRbUSgnD?startTime=1759249487000
+    Passcode: ea=GE5Xx
+
+    5. https://us06web.zoom.us/rec/share/0JRdZCnVhCor2rX-bYmgPAY15ccgs0tkvb-Osa-KXzshn9lq558_v95uGqDuWe9a.96-cHv_dX1yoEVMF?startTime=1757521417000
+    Passcode: TD?^9B2Y
+
+    6. https://us06web.zoom.us/rec/share/EWherm-X15PUKdNQ3XLdwxIG9XyV1CeRX5dsy-byKa-zOXUqIBcnrnfo2q5pcBJh.zncWzZqo_oUau5u7?startTime=1759251542000
+    Passcode: ea=GE5Xx
+
+
+    7. https://us06web.zoom.us/rec/share/1sbGXA-gmyZj-R8EzjM5WYxd21BYiHhjALw26L7IDGMVAzcRpR8r9XJs39ZWGK5Q.mba9_99kF93E20yK?startTime=1759335416000
+    Passcode: 76#FQKNM
+
 
 ---
 12. **App Scaffolding** - [Branch: 12-app-scaffolding]
