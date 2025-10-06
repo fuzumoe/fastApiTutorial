@@ -146,19 +146,26 @@ This repository contains a series of lessons demonstrating how to build robust A
    * Securing routes with dependencies
    * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/11-authentication/README.md)
    * Vidoes
-    1. https://us06web.zoom.us/rec/share/yfxEwEg3M4n3zXeYtCzMlUe_VLjzrhfEDT8FMOPsj3wvOdK-VC-I8mEo3MNyQDsQ.7IgljIcN8SjIF1Ya?startTime=1757347534000
+     
+  1. https://us06web.zoom.us/rec/share/yfxEwEg3M4n3zXeYtCzMlUe_VLjzrhfEDT8FMOPsj3wvOdK-VC-I8mEo3MNyQDsQ.7IgljIcN8SjIF1Ya?startTime=1757347534000
+    Passcode: +CJD2c$d
+
+  2. https://us06web.zoom.us/rec/share/yfxEwEg3M4n3zXeYtCzMlUe_VLjzrhfEDT8FMOPsj3wvOdK-VC-I8mEo3MNyQDsQ.7IgljIcN8SjIF1Ya?startTime=1757349122000
     Passcode: +CJD2c$d  
-    2. https://us06web.zoom.us/rec/share/yfxEwEg3M4n3zXeYtCzMlUe_VLjzrhfEDT8FMOPsj3wvOdK-VC-I8mEo3MNyQDsQ.7IgljIcN8SjIF1Ya?startTime=1757349122000
-    Passcode: +CJD2c$d  
-    3. https://us06web.zoom.us/rec/share/EWherm-X15PUKdNQ3XLdwxIG9XyV1CeRX5dsy-byKa-zOXUqIBcnrnfo2q5pcBJh.zncWzZqo_oUau5u7?startTime=1759249487000
+  
+  3. https://us06web.zoom.us/rec/share/EWherm-X15PUKdNQ3XLdwxIG9XyV1CeRX5dsy-byKa-zOXUqIBcnrnfo2q5pcBJh.zncWzZqo_oUau5u7?startTime=1759249487000
     Passcode: ea=GE5Xx  
-    4. https://us06web.zoom.us/rec/share/UOtTo8ltzb9BAR-g9aUxPTQYBGEFvAYZXge4hjUv6OMIH4_2NWgpgz6jO0eSG9--.iY1mZDtgQRbUSgnD?startTime=1759249487000
+  
+  4. https://us06web.zoom.us/rec/share/UOtTo8ltzb9BAR-g9aUxPTQYBGEFvAYZXge4hjUv6OMIH4_2NWgpgz6jO0eSG9--.iY1mZDtgQRbUSgnD?startTime=1759249487000
     Passcode: ea=GE5Xx  
-    5. https://us06web.zoom.us/rec/share/0JRdZCnVhCor2rX-bYmgPAY15ccgs0tkvb-Osa-KXzshn9lq558_v95uGqDuWe9a.96-cHv_dX1yoEVMF?startTime=1757521417000
+  
+  5. https://us06web.zoom.us/rec/share/0JRdZCnVhCor2rX-bYmgPAY15ccgs0tkvb-Osa-KXzshn9lq558_v95uGqDuWe9a.96-cHv_dX1yoEVMF?startTime=1757521417000
     Passcode: TD?^9B2Y  
-    6. https://us06web.zoom.us/rec/share/EWherm-X15PUKdNQ3XLdwxIG9XyV1CeRX5dsy-byKa-zOXUqIBcnrnfo2q5pcBJh.zncWzZqo_oUau5u7?startTime=1759251542000
-    Passcode: ea=GE5Xx   
-    7. https://us06web.zoom.us/rec/share/1sbGXA-gmyZj-R8EzjM5WYxd21BYiHhjALw26L7IDGMVAzcRpR8r9XJs39ZWGK5Q.mba9_99kF93E20yK?startTime=1759335416000
+  
+  6. https://us06web.zoom.us/rec/share/EWherm-X15PUKdNQ3XLdwxIG9XyV1CeRX5dsy-byKa-zOXUqIBcnrnfo2q5pcBJh.zncWzZqo_oUau5u7?startTime=1759251542000
+    Passcode: ea=GE5Xx
+
+  7. https://us06web.zoom.us/rec/share/1sbGXA-gmyZj-R8EzjM5WYxd21BYiHhjALw26L7IDGMVAzcRpR8r9XJs39ZWGK5Q.mba9_99kF93E20yK?startTime=1759335416000
     Passcode: 76#FQKNM
 
 
