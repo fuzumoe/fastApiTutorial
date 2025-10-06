@@ -134,7 +134,7 @@ This repository contains a series of lessons demonstrating how to build robust A
    4. https://us06web.zoom.us/rec/share/331v6kG4jzAooxcVADIjWeC6kr66ILb_nUhYdC16-zBg6xtohQju0i0wzPiPHvw.K0DxC4-X6wPEgMAx?startTime=1758557469000
     Passcode: sn$sYe*5
 
-    5. https://us06web.zoom.us/rec/share/331v6kG4jzAooxcVADIjWeC6kr66ILb_nUhYdC16-zBg6xtohQju0i0wzPiPHvw.K0DxC4-X6wPEgMAx?startTime=1758559637000
+  5. https://us06web.zoom.us/rec/share/331v6kG4jzAooxcVADIjWeC6kr66ILb_nUhYdC16-zBg6xtohQju0i0wzPiPHvw.K0DxC4-X6wPEgMAx?startTime=1758559637000
     Passcode: sn$sYe*5
 
 
@@ -146,10 +146,8 @@ This repository contains a series of lessons demonstrating how to build robust A
    * Securing routes with dependencies
    * [View lesson README](https://github.com/fuzumoe/fastApiTutorial/blob/11-authentication/README.md)
    * Vidoes
-
     1. https://us06web.zoom.us/rec/share/yfxEwEg3M4n3zXeYtCzMlUe_VLjzrhfEDT8FMOPsj3wvOdK-VC-I8mEo3MNyQDsQ.7IgljIcN8SjIF1Ya?startTime=1757347534000
-    Passcode: +CJD2c$d
-
+    Passcode: +CJD2c$d  
     2. https://us06web.zoom.us/rec/share/yfxEwEg3M4n3zXeYtCzMlUe_VLjzrhfEDT8FMOPsj3wvOdK-VC-I8mEo3MNyQDsQ.7IgljIcN8SjIF1Ya?startTime=1757349122000
     Passcode: +CJD2c$d
 
