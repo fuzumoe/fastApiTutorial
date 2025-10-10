@@ -168,6 +168,14 @@ This repository contains a series of lessons demonstrating how to build robust A
   7. https://us06web.zoom.us/rec/share/1sbGXA-gmyZj-R8EzjM5WYxd21BYiHhjALw26L7IDGMVAzcRpR8r9XJs39ZWGK5Q.mba9_99kF93E20yK?startTime=1759335416000
     Passcode: 76#FQKNM
 
+  9. https://us06web.zoom.us/rec/share/IkR-Jbaao1ExShjDb9yqmKVVdr7bfOW3_-Sj_lJlxV8Yep82R0mymHvdrlUhfGZj.QWyzWWxkTgBeW4ct?startTime=1759507852000
+    Passcode: VgREWL8=
+
+  10. https://us06web.zoom.us/rec/share/Z6GJcbzI8DGMius1B7FQh1i_6Dq29vZsH8uglDwua0toir9hbXaWwLGZkwYm7qiB.Thwyjc5EHiFGGXpu?startTime=1759767052000
+    Passcode: 9=R!ey#g
+
+  11. https://us06web.zoom.us/rec/share/Z6GJcbzI8DGMius1B7FQh1i_6Dq29vZsH8uglDwua0toir9hbXaWwLGZkwYm7qiB.Thwyjc5EHiFGGXpu?startTime=1759767052000
+      Passcode: 9=R!ey#g
 
 ---
 12. **App Scaffolding** - [Branch: 12-app-scaffolding]
